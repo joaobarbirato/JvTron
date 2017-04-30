@@ -22,6 +22,7 @@ public:
 	~Fila();
 	void Insere(const char &, bool &);
 	void Retira(char &, bool &);
+	void RetiraAPartirDe(const int &, bool &);
 	bool Vazia() const;
 };
 

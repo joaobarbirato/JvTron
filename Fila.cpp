@@ -7,7 +7,7 @@ using namespace std;
 Fila::Fila(){ // Cria()
 	ultimo = NULL;
 	primeiro = NULL;
-
+	nElementos = 0;
 };
 
 bool Fila::Vazia() const {
@@ -29,6 +29,7 @@ void Fila::Insere(const char & x, bool &  deuCerto){
 		else
 			this->ultimo->next = PAux;
 		this->ultimo = PAux;
+		nElementos++;
 	}
 };
 
@@ -43,8 +44,8 @@ void Fila::Retira(char & x, bool & deuCerto){
 		this->primeiro = this->primeiro->next;
 		if(this->primeiro == NULL)
 			this->ultimo = NULL;
-		nElementos--;
 		delete PAux;
+		nElementos--;
 	}
 };
 	
@@ -53,5 +54,19 @@ Fila::~Fila(){ // Destroi()
 	bool deuCerto = true;
 	while(!this->Vazia()){
 		this->Retira(x, deuCerto);
+	}
+};
+
+void Fila::RetiraAPartirDe(const int & n, bool & deuCerto){
+	Fila F;
+	char x;
+	deuCerto = true;
+	for(int i = 0; i < (nElementos - n + 1); i++){
+		this->Retira(x, deuCerto);
+//		cout << x << endl;
+		if(!deuCerto){
+			i = (nElementos-n+1);
+		}else
+			F.Insere(x, deuCerto);
 	}
 };
