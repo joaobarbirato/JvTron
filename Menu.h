@@ -7,10 +7,11 @@
 class Menu{
 private:
 	int numeroItem;
+	float largura, altura;
 	sf::Font fonte;
 	sf::Text botao[maxNumeroItens];
 public:
-	Menu(float largura, float altura);
+	Menu(float larg, float alt);
 	~Menu();
 
 	void desenha(sf::RenderWindow &janela);
