@@ -6,6 +6,8 @@ Menu::Menu(float larg, float alt){
 	string texto[maxNumeroItens] = {"Jogar", "Opcoes", "Sair"};
 	largura = larg;
 	altura = alt;
+	centrox = largura/2;
+	centroy = altura/2;
 	if(!fonte.loadFromFile("TRON.TTF")){
 		//error
 	}
@@ -19,7 +21,7 @@ Menu::Menu(float larg, float alt){
 			botao[i].setFillColor(sf::Color::White);
 
 		botao[i].setString(texto[i]);
-		botao[i].setPosition(sf::Vector2f((largura-100)/2.2, (altura-100)*2/3 + altura/(maxNumeroItens+1)/4*	i));
+		botao[i].setPosition(sf::Vector2f(centrox - botao[i].getCharacterSize()*3, (altura-100)*2/3 + altura/(maxNumeroItens+1)/4*	i));
 	}
 
 	numeroItem = 0;
@@ -27,12 +29,14 @@ Menu::Menu(float larg, float alt){
 Menu::~Menu(){};
 
 void Menu::desenha(sf::RenderWindow &janela){
+
 	sf::Text titulo;
 	titulo.setFont(fonte);
 	titulo.setString("JvTron");
 	titulo.setCharacterSize(50);
-	titulo.setPosition(sf::Vector2f((largura-100)/2.8, altura/3 - 80));
+	titulo.setPosition(sf::Vector2f(centrox - titulo.getCharacterSize()*3, centroy-altura*1/3 + titulo.getCharacterSize()));
 	titulo.setFillColor(sf::Color(0,255,255));
+
 	sf::Vertex vertEsq[] =	{
 	    sf::Vertex(sf::Vector2f(50, altura/3), sf::Color(0,255,255)),
 	    sf::Vertex(sf::Vector2f(50, altura - 50), sf::Color(0,255,255))
@@ -76,3 +80,7 @@ void Menu::MovaParaBaixo(){
 	}
 };
 int Menu::ItemApertado(){ return numeroItem; };
+
+sf::Vector2f Menu::getCentro() const{
+	return sf::Vector2f(centrox,centroy);
+};

@@ -7,7 +7,7 @@
 class Menu{
 private:
 	int numeroItem;
-	float largura, altura;
+	float largura, altura, centrox, centroy;
 	sf::Font fonte;
 	sf::Text botao[maxNumeroItens];
 public:
@@ -18,6 +18,8 @@ public:
 	void MovaParaCima();
 	void MovaParaBaixo();
 	int ItemApertado();
+
+	sf::Vector2f getCentro() const;
 };
 
 #endif
