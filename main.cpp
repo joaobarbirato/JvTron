@@ -12,7 +12,7 @@ void drawCampo(sf::RenderWindow &);
 
 int main (){
     
-    sf::RenderWindow window(sf::VideoMode(1000,1000),"SFML tutorial",sf::Style::Close | sf::Style::Resize);
+    sf::RenderWindow window(sf::VideoMode(600,600),"SFML tutorial",sf::Style::Close | sf::Style::Resize);
 //    sf::View view(sf::Vector2f(0.0f,0.0f),sf::Vector2f(VIEW_HEIGHT,VIEW_HEIGHT));
     std::string playing = "playing";
     Menu menu(window.getSize().x, window.getSize().y);
@@ -21,13 +21,13 @@ int main (){
     //textura para a moto
     sf::Texture playert;
     sf::Texture playert2;
-    playert2.loadFromFile("direita.png");
+    playert2.loadFromFile("motoMovendo/direita.png");
     player[0].setTexture(playert2);
-    playert.loadFromFile("cima.png");
+    playert.loadFromFile("motoMovendo/cima.png");
     player[1].setTexture(playert);
-    playert2.loadFromFile("esquerda.png");
+    playert2.loadFromFile("motoMovendo/esquerda.png");
     player[2].setTexture(playert2);
-    playert.loadFromFile("baixo.png");
+    playert.loadFromFile("motoMovendo/baixo.png");
     player[3].setTexture(playert);
 
     sf::Vertex vertex[10000]; //esse vai ser o tipo da pilha q vai ser usado
@@ -44,6 +44,7 @@ int main (){
                 
                     //evento para fechar
                     case sf::Event::Closed:
+                        system("rm jogo.bin");
                         window.close();
                         break;
 
@@ -148,6 +149,7 @@ int main (){
             }
             
             //desenha na tela o ratro e a moto
+            drawCampo(window);
             window.draw(vertex,10000,sf::Points);
             window.draw(moto);
             window.display();
