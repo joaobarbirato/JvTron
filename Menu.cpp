@@ -2,17 +2,22 @@
 #include <iostream>
 using std::string;
 
-Menu::Menu(float larg, float alt){
+Menu::Menu(float larg, float alt): Tela::Tela(larg, alt, 50), maxNumeroItens(3) {
 	string texto[maxNumeroItens] = {"Jogar", "Opcoes", "Sair"};
-	largura = larg;
-	altura = alt;
-	centrox = largura/2;
-	centroy = altura/2;
+	botao = new sf::Text[maxNumeroItens];
+/*	getLargura() = larg;
+	getAltura() = alt;
+	getCx() = getLargura()/2;
+	getCy() = getAltura()/2;
 	if(!fonte.loadFromFile("TRON.TTF")){
 		//error
-	}
+	}*/
+	getTitulo().setCharacterSize(getTFonte());
+	getTitulo().setPosition(sf::Vector2f(getCx() - getTitulo().getCharacterSize()*3, getCy()-getAltura()*1/3 + getTitulo().getCharacterSize()));
+	getTitulo().setFillColor(sf::Color(0,255,255));
+
 	for(int i = 0; i < maxNumeroItens; i++){
-		botao[i].setFont(fonte);
+		botao[i].setFont(getFonte());
 		botao[i].setCharacterSize(20);
 
 		if(i == 0)
@@ -21,47 +26,41 @@ Menu::Menu(float larg, float alt){
 			botao[i].setFillColor(sf::Color::White);
 
 		botao[i].setString(texto[i]);
-		botao[i].setPosition(sf::Vector2f(centrox - botao[i].getCharacterSize()*3, (altura-100)*2/3 + altura/(maxNumeroItens+1)/4*	i));
+		botao[i].setPosition(sf::Vector2f(getCx() - botao[i].getCharacterSize()*3, (getAltura()-100)*2/3 + getAltura()/(maxNumeroItens+1)/4*	i));
 	}
 
 	numeroItem = 0;
 };
-Menu::~Menu(){};
+Menu::~Menu(){
+	delete [] botao;
+};
 
-void Menu::desenha(sf::RenderWindow &janela){
-
-	sf::Text titulo;
-	titulo.setFont(fonte);
-	titulo.setString("JvTron");
-	titulo.setCharacterSize(50);
-	titulo.setPosition(sf::Vector2f(centrox - titulo.getCharacterSize()*3, centroy-altura*1/3 + titulo.getCharacterSize()));
-	titulo.setFillColor(sf::Color(0,255,255));
-
+void Menu::desenha(sf::RenderWindow *janela) const{
 	sf::Vertex vertEsq[] =	{
-	    sf::Vertex(sf::Vector2f(50, altura/3), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(50, altura - 50), sf::Color(0,255,255))
+	    sf::Vertex(sf::Vector2f(50, getAltura()/3), sf::Color(0,255,255)),
+	    sf::Vertex(sf::Vector2f(50, getAltura() - 50), sf::Color(0,255,255))
 	};
 	sf::Vertex vertDir[] =	{
-	    sf::Vertex(sf::Vector2f(largura - 50, altura/3), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(largura - 50, altura - 50), sf::Color(0,255,255))
+	    sf::Vertex(sf::Vector2f(getLargura() - 50, getAltura()/3), sf::Color(0,255,255)),
+	    sf::Vertex(sf::Vector2f(getLargura() - 50, getAltura() - 50), sf::Color(0,255,255))
 	};
 	sf::Vertex horCima[] =	{
-	    sf::Vertex(sf::Vector2f(50, altura/3), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(largura - 50, altura/3), sf::Color(0,255,255))
+	    sf::Vertex(sf::Vector2f(50, getAltura()/3), sf::Color(0,255,255)),
+	    sf::Vertex(sf::Vector2f(getLargura() - 50, getAltura()/3), sf::Color(0,255,255))
 	};
 	sf::Vertex horBaixo[] =	{
-	    sf::Vertex(sf::Vector2f(50, altura - 50), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(largura - 50, altura - 50), sf::Color(0,255,255))
+	    sf::Vertex(sf::Vector2f(50, getAltura() - 50), sf::Color(0,255,255)),
+	    sf::Vertex(sf::Vector2f(getLargura() - 50, getAltura() - 50), sf::Color(0,255,255))
 	};
 
-	janela.draw(titulo);
+	janela->draw(getTitulo());
 	for(int i = 0; i < maxNumeroItens; i++){
-		janela.draw(botao[i]);
+		janela->draw(botao[i]);
 	}
-	janela.draw(vertEsq, 2, sf::Lines);
-	janela.draw(vertDir, 2, sf::Lines);
-	janela.draw(horCima, 2, sf::Lines);
-	janela.draw(horBaixo, 2, sf::Lines);
+	janela->draw(vertEsq, 2, sf::Lines);
+	janela->draw(vertDir, 2, sf::Lines);
+	janela->draw(horCima, 2, sf::Lines);
+	janela->draw(horBaixo, 2, sf::Lines);
 };
 
 void Menu::MovaParaCima(){
@@ -82,5 +81,5 @@ void Menu::MovaParaBaixo(){
 int Menu::ItemApertado(){ return numeroItem; };
 
 sf::Vector2f Menu::getCentro() const{
-	return sf::Vector2f(centrox,centroy);
+	return sf::Vector2f(getCx(),getCy());
 };

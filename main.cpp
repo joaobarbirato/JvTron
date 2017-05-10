@@ -203,7 +203,7 @@ int main (){
             window.clear();
  //         view.setCenter(menu.getCentro());
  //           window.setView(view);
-            menu.desenha(window);
+            menu.desenha(&window);
             //limpa a tela 
             window.display();
 
