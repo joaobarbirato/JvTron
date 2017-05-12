@@ -2,11 +2,13 @@
 /*
 	Cabeçalho da Fila
 */
+
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
 // Estrutura do nó
 struct Node{
-	char info;
+	sf::Vertex info;
 	struct Node *next;
 };
 typedef struct Node * NodePtr;
@@ -20,8 +22,8 @@ private:
 public:
 	Fila();
 	~Fila();
-	void Insere(const char &, bool &);
-	void Retira(char &, bool &);
+	void Insere(const sf::Vertex  &, bool &);
+	void Retira(sf::Vertex  &, bool &);
 	void RetiraAPartirDe(const int &, bool &);
 	bool Vazia() const;
 };

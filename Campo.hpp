@@ -1,18 +1,12 @@
 #include <iostream>
 #include "Tela.hpp"
-
+#include "moto.h"
 #include <SFML/Graphics.hpp>
 
 class Campo : public Tela{
 private:
-    sf::Sprite player[4]; // retangulo para a moto
-    sf::Sprite moto;
-    //textura para a moto
-    sf::Texture playert;
-    sf::Texture playert2;
-    sf::Vertex vertex[10000]; //esse vai ser o tipo da pilha q vai ser usado
-    int i=0,j=0; // contadores para rodar o vetor e adicionar por onde ele passa
-    int x=0,y=0; // valores para acertar o ratro confome a virada da moto
+    Moto moto;
+    int i=0; // contadores para rodar o vetor e adicionar por onde ele passa
 public:
 	Campo(void);
 	virtual int Run(sf::RenderWindow &App);
@@ -20,14 +14,7 @@ public:
 };
 
 Campo::Campo(void){
-    playert2.loadFromFile("motoMovendo/direita.png");
-    player[0].setTexture(playert2);
-    playert.loadFromFile("motoMovendo/cima.png");
-    player[1].setTexture(playert);
-    playert2.loadFromFile("motoMovendo/esquerda.png");
-    player[2].setTexture(playert2);
-    playert.loadFromFile("motoMovendo/baixo.png");
-    player[3].setTexture(playert);
+    moto.mudarDireita();
 
 }
 
@@ -58,51 +45,16 @@ int Campo::Run(sf::RenderWindow &App){
                             break;
                         
                         case sf::Keyboard::A:
-                            if(j == 1){
-                                player[2].setPosition(sf::Vector2f(moto.getPosition().x  + (moto.getTexture()->getSize().x)/2 - player[2].getTexture()->getSize().x   ,moto.getPosition().y - (player[2].getTexture()->getSize().y)/2 + moto.getTexture()->getSize().y  ));
-                            }if(j == 3){
-                                player[2].setPosition(sf::Vector2f(moto.getPosition().x - player[2].getTexture()->getSize().x + (moto.getTexture()->getSize().x)/2   , moto.getPosition().y - (player[2].getTexture()->getSize().y)/2 ));
-                            }
-                            x=player[2].getTexture()->getSize().x;
-                            y=(player[2].getTexture()->getSize().y)/2;
-                            moto=player[2];
-                            j=2;
+                            moto.mudarEsquerda();
                             break;
                         case sf::Keyboard::S:
-                            if(j == 0){
-                                player[3].setPosition(sf::Vector2f(moto.getPosition().x - (player[3].getTexture()->getSize().x)/2  ,moto.getPosition().y + (moto.getTexture()->getSize().y)/2 ));
-                            }
-                            if(j == 2){
-                                player[3].setPosition(sf::Vector2f(moto.getPosition().x + moto.getTexture()->getSize().x - (player[3].getTexture()->getSize().x)/2  , moto.getPosition().y + (moto.getTexture()->getSize().y)/2 ));
-                            }
-                            x= (player[3].getTexture()->getSize().x)/2;
-                            y=0;
-                            moto=player[3];
-                            j=3;
+                            moto.mudarBaixo();
                             break;
                         case sf::Keyboard::D:
-                            if(j == 3){
-                                player[0].setPosition(sf::Vector2f(moto.getPosition().x + (moto.getTexture()->getSize().x)/2 ,moto.getPosition().y - (player[0].getTexture()->getSize().y)/2 ));
-                            }
-                            if(j == 1){
-                                player[0].setPosition(sf::Vector2f(moto.getPosition().x + (moto.getTexture()->getSize().x)/2  , moto.getPosition().y + moto.getTexture()->getSize().y - (player[0].getTexture()->getSize().y)/2) );
-                            }
-                            x=0;
-                            y=(player[2].getTexture()->getSize().y)/2;
-                            moto=player[0];
-                            j=0;
+                            moto.mudarDireita();
                             break;
                         case sf::Keyboard::W:
-                            if(j == 0){
-                                player[1].setPosition(sf::Vector2f(moto.getPosition().x - (player[1].getTexture()->getSize().x)/2 ,moto.getPosition().y  + (moto.getTexture()->getSize().y)/2  - player[1].getTexture()->getSize().y ));
-                            }
-                            if(j == 2){
-                                player[1].setPosition(sf::Vector2f(moto.getPosition().x + moto.getTexture()->getSize().x - (player[1].getTexture()->getSize().x)/2 , moto.getPosition().y +  (moto.getTexture()->getSize().y)/2 - player[1].getTexture()->getSize().y ));
-                            }
-                            y=player[1].getTexture()->getSize().y;
-                            x=(player[1].getTexture()->getSize().x)/2;
-                            moto=player[1];
-                            j=1;
+                            moto.mudarCima();
                             break;
                     }
                     break;
@@ -111,38 +63,28 @@ int Campo::Run(sf::RenderWindow &App){
         if (Event.type == sf::Event::KeyReleased ){
             //caso a pessoa aperte o A
             if (Event.key.code == sf::Keyboard::A){
-                //a moto estava antes em qual rotação ?
-                moto.move(-1.0f,0.0f);
+                moto.moverEsquerda();
             }
             //caso a pessoa aperte o S
             if (Event.key.code == sf::Keyboard::S){
-                //a moto estava antes em qual rotação ?
-                moto.move(0.0f,1.0f);    
+                moto.moverBaixo();
             }
             //caso a pessoa aperte o D
             if (Event.key.code == sf::Keyboard::D){
-                //a moto estava antes em qual rotação ?
-                moto.move(1.0f,0.0f);
+                moto.moverDireita();
             }   
             //caso a pessoa aperte o D
             if (Event.key.code == sf::Keyboard::W){
-                //a moto estava antes em qual rotação ?
-                moto.move(0.0f,-1.0f);    
+                moto.moverCima();
             }
         }
-        //adiciona as posições que ela passa, menos a igual q a anterior
-        if(i<10000 && vertex[i-1].position!=moto.getPosition() ){
-           vertex[i].position=moto.getPosition();
-           vertex[i].position.y+=y;
-           vertex[i].position.x+=x;
-           vertex[i].color = sf::Color(0,255,255);
-           i++;
-        }
+    
         
         //desenha na tela o ratro e a moto
         desenha(App);
-        App.draw(vertex,10000,sf::Points);
-        App.draw(moto);
+//         ver funcionamento da cauda - a parte da info
+//         App.draw(vertex,10000,sf::Points);
+//         App.draw(moto);
         App.display();
         //limpa a tela 
         App.clear();
