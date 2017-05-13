@@ -22,7 +22,7 @@ private:
 public:
 	Fila();
 	~Fila();
-	void Insere(const sf::Vertex  &, bool &);
+	void Insere( sf::Vertex &, bool &);
 	void Retira(sf::Vertex  &, bool &);
 	void RetiraAPartirDe(const int &, bool &);
 	bool Vazia() const;

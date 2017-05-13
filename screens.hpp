@@ -7,5 +7,5 @@
 //Including each screen of application
 #include "Menu.hpp"
 #include "Campo.hpp"
-
+#include "Moto.h"
 #endif // SCREENS_HPP_INCLUDED

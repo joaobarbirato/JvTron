@@ -1,51 +1,48 @@
 #include <iostream>
-#include "moto.h"
+#include "Moto.h"
+
 using namespace std;
 
 /*
 	Implementação dos métodos da Fila
 */
-Moto::moto()
-{
-    
-}
 
 void Moto::mudarCima(){
     sf::Texture textura;
     sf::Sprite auxMoto;
     
-    textura.loadFromFile("motoMovendo/cima.png");
+    textura.loadFromFile("cima.png");
     auxMoto.setTexture(textura);
     
     if(posicao == 3){
-        auxMoto.setPosition(sf::Vector2f(moto.getPosition().x + (moto.getTexture()->getSize().x)/2 ,moto.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 ));
+        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().x)/2 ,forma.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 ));
     }
     if(posicao == 1){
-        auxMoto.setPosition(sf::Vector2f(moto.getPosition().x + (moto.getTexture()->getSize().x)/2  , moto.getPosition().y + moto.getTexture()->getSize().y -  (auxMoto.getTexture()->getSize().y)/2) );
+        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().x)/2  , forma.getPosition().y + forma.getTexture()->getSize().y -  (auxMoto.getTexture()->getSize().y)/2) );
     }
-    this->auxX=0;
-    this->auxY=(auxMoto.getTexture()->getSize().y)/2;
-    this->setTexture(auxMoto.getTexture());
-    this->setPosition(auxMoto.getPosition());
+    auxX=0;
+    auxY=(auxMoto.getTexture()->getSize().y)/2;
+    forma.setTexture(textura);
+    forma.setPosition(auxMoto.getPosition());
     posicao=0;
 };
 void Moto::mudarBaixo(){
     sf::Texture textura;
     sf::Sprite auxMoto;
     
-    textura.loadFromFile("motoMovendo/baixo.png");
+    textura.loadFromFile("baixo.png");
     auxMoto.setTexture(textura);
     
     if(posicao == 0){
-        auxMoto.setPosition(sf::Vector2f(moto.getPosition().x - (auxMoto.getTexture()->getSize().x)/2  ,moto.getPosition().y + (moto.getTexture()->getSize().y)/2 ));
+        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x - (auxMoto.getTexture()->getSize().x)/2  ,forma.getPosition().y + (forma.getTexture()->getSize().y)/2 ));
     }
     if(posicao == 2){
-        auxMoto.setPosition(sf::Vector2f(moto.getPosition().x + moto.getTexture()->getSize().x - (auxMoto.getTexture()->getSize().x)/2  , moto.getPosition().y + (moto.getTexture()->getSize().y)/2 ));
+        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + forma.getTexture()->getSize().x - (auxMoto.getTexture()->getSize().x)/2  , forma.getPosition().y + (forma.getTexture()->getSize().y)/2 ));
     }
-    this->auxX= (auxMoto.getTexture()->getSize().x)/2;
-    this->auxY=0;
-    this->setTexture(auxMoto.getTexture());
-    this->setPosition(auxMoto.getPosition());
+    auxX= (auxMoto.getTexture()->getSize().x)/2;
+    auxY=0;
+    forma.setTexture(textura);
+    forma.setPosition(auxMoto.getPosition());
     posicao=3;
 };
 void Moto::mudarDireita(){
@@ -56,15 +53,15 @@ void Moto::mudarDireita(){
     auxMoto.setTexture(textura);
     
     if(posicao == 3){
-        auxMoto.setPosition(sf::Vector2f(moto.getPosition().x + (moto.getTexture()->getSize().x)/2 ,moto.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 ));
+        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().x)/2 ,forma.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 ));
     }
     if(posicao == 1){
-        auxMoto.setPosition(sf::Vector2f(moto.getPosition().x + (moto.getTexture()->getSize().x)/2  , moto.getPosition().y + moto.getTexture()->getSize().y - (auxMoto.getTexture()->getSize().y)/2) );
+        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().x)/2  , forma.getPosition().y + forma.getTexture()->getSize().y - (auxMoto.getTexture()->getSize().y)/2) );
     }
-    this->auxX=0;
-    this->auxY=(auxMoto.getTexture()->getSize().y)/2;
-    this->setTexture(auxMoto.getTexture());
-    this->setPosition(auxMoto.getPosition());
+    auxX=0;
+    auxY=(auxMoto.getTexture()->getSize().y)/2;
+    forma.setTexture(textura);
+    forma.setPosition(auxMoto.getPosition());
     posicao=0;
     
 };
@@ -76,46 +73,55 @@ void Moto::mudarEsquerda(){
     auxMoto.setTexture(textura);
     
     if(posicao == 1){
-        auxMoto.setPosition(sf::Vector2f(moto.getPosition().x  + (moto.getTexture()->getSize().x)/2 - auxMoto.getTexture()->getSize().x   ,moto.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 + moto.getTexture()->getSize().y  ));
+        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x  + (forma.getTexture()->getSize().x)/2 - auxMoto.getTexture()->getSize().x   ,forma.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 + forma.getTexture()->getSize().y  ));
     }
     if(posicao == 3){
-        auxMoto.setPosition(sf::Vector2f(moto.getPosition().x - auxMoto.getTexture()->getSize().x + (moto.getTexture()->getSize().x)/2   , moto.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 ));
+        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x - auxMoto.getTexture()->getSize().x + (forma.getTexture()->getSize().x)/2   , forma.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 ));
     }
-    this->auxX=auxMoto.getTexture()->getSize().x;
-    this->auxY=(auxMoto.getTexture()->getSize().y)/2;
-    this->setTexture(auxMoto.getTexture());
-    this->setPosition(auxMoto.getPosition());
+    auxX=auxMoto.getTexture()->getSize().x;
+    auxY=(auxMoto.getTexture()->getSize().y)/2;
+    forma.setTexture(textura);
+    forma.setPosition(auxMoto.getPosition());
     posicao=2;
     
     
 };
 
 void Moto::moverCima(){
-    this->move(0.0f,-1.0f); 
-    this->adicionarCauda();
+    forma.move(0.0f,-1.0f); 
+    adicionarCauda();
 };
 void Moto::moverBaixo(){
-    this->move(0.0f,1.0f); 
-    this->adicionarCauda();
+    forma.move(0.0f,1.0f); 
+    adicionarCauda();
 };
 void Moto::moverEsquerda(){
-    this->move(-1.0f,0.0f);
-    this->adicionarCauda();
+    forma.move(-1.0f,0.0f);
+    adicionarCauda();
 };
 void Moto::moverDireita(){
-    this->move(1.0f,0.0f);
-    this->adicionarCauda();
+    forma.move(1.0f,0.0f);
+    adicionarCauda();
+};
+ Fila Moto::getCauda(){
+     
+     return cauda;
 };
 
 
 void Moto::adicionarCauda(){
     sf::Vertex auxCauda;
     bool ok;
-    auxCauda.position=this->getPosition();
+    auxCauda.position=forma.getPosition();
     auxCauda.position.y+=auxY;
-    auxCauda.position.x+=aux;
+    auxCauda.position.x+=auxX;
     auxCauda.color = sf::Color(0,255,255);
-    this->cauda.Insere(auxCauda,ok);
+    cauda.Insere(auxCauda,ok);
     
 };
+
+sf::Sprite Moto::getForma(){
+    
+    return forma;
+}
 

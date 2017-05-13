@@ -10,24 +10,28 @@ using namespace std;
 #include "Fila.h"
 
 
-class Moto : sf::Sprite {
+class Moto{
     public:
-        moto();
+        
         void moverCima();
         void moverBaixo();
         void moverEsquerda();
         void moverDireita();
-        
+            
+        sf::Sprite getForma();
         void mudarCima();
         void mudarBaixo();
         void mudarEsquerda();
         void mudarDireita();
+        
+        Fila getCauda();
 
     private:
         Fila cauda;
+        sf::Sprite forma;
         int auxX;
         int auxY;
-        
+        int posicao;
         void adicionarCauda();
         
 };

@@ -1,12 +1,14 @@
 #include <iostream>
 #include "Tela.hpp"
-#include "moto.h"
+#include "Moto.h"
 #include <SFML/Graphics.hpp>
 
 class Campo : public Tela{
 private:
     Moto moto;
-    int i=0; // contadores para rodar o vetor e adicionar por onde ele passa
+    sf::Vertex c;
+    sf::Vertex primeiro;
+    bool deuCerto,deuCerto1;// contadores para rodar o vetor e adicionar por onde ele passa
 public:
 	Campo(void);
 	virtual int Run(sf::RenderWindow &App);
@@ -83,8 +85,9 @@ int Campo::Run(sf::RenderWindow &App){
         //desenha na tela o ratro e a moto
         desenha(App);
 //         ver funcionamento da cauda - a parte da info
-//         App.draw(vertex,10000,sf::Points);
-//         App.draw(moto);
+            moto.getCauda().Retira(c,deuCerto);
+        
+        App.draw(moto.getForma());
         App.display();
         //limpa a tela 
         App.clear();

@@ -11,12 +11,12 @@ Fila::Fila(){ // Cria()
 };
 
 bool Fila::Vazia() const {
-	if(this->primeiro == NULL)
+	if(primeiro == NULL)
 		return true;
 	return false;
 };
 
-void Fila::Insere(const char & x, bool &  deuCerto){
+void Fila::Insere( sf::Vertex & x, bool& deuCerto){
 	NodePtr PAux = new Node;
 	if(PAux == NULL)
 		deuCerto = false;
@@ -24,33 +24,36 @@ void Fila::Insere(const char & x, bool &  deuCerto){
 		deuCerto = true;
 		PAux->info = x;
 		PAux->next = NULL;
-		if(Vazia())
-			this->primeiro = PAux;
-		else
-			this->ultimo->next = PAux;
-		this->ultimo = PAux;
+		if(Vazia()){
+			primeiro = PAux;
+            ultimo = PAux;
+        }else{
+            ultimo->next = PAux;
+            ultimo = PAux;
+            
+        }
 		nElementos++;
 	}
 };
 
-void Fila::Retira(char & x, bool & deuCerto){
-	NodePtr PAux;
+void Fila::Retira(sf::Vertex & x, bool & deuCerto){
+	NodePtr PAux = new Node;
 	if(Vazia()){
 		deuCerto = false;
 	}else{
 		deuCerto = true;
-		x = this->primeiro->info;
-		PAux = this->primeiro;
-		this->primeiro = this->primeiro->next;
-		if(this->primeiro == NULL)
-			this->ultimo = NULL;
+		x = primeiro->info;
+		PAux = primeiro;
+		primeiro = primeiro->next;
+		if(primeiro == NULL)
+			ultimo = NULL;
 		delete PAux;
 		nElementos--;
 	}
 };
 	
 Fila::~Fila(){ // Destroi()
-	char x;
+	sf::Vertex x;
 	bool deuCerto = true;
 	while(!this->Vazia()){
 		this->Retira(x, deuCerto);
@@ -59,7 +62,7 @@ Fila::~Fila(){ // Destroi()
 
 void Fila::RetiraAPartirDe(const int & n, bool & deuCerto){
 	Fila F;
-	char x;
+	sf::Vertex x;
 	deuCerto = true;
 	for(int i = 0; i < (nElementos - n + 1); i++){
 		this->Retira(x, deuCerto);
@@ -70,3 +73,4 @@ void Fila::RetiraAPartirDe(const int & n, bool & deuCerto){
 			F.Insere(x, deuCerto);
 	}
 };
+
