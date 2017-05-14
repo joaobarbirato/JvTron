@@ -2,7 +2,7 @@
 #include <iostream>
 #include "screens.hpp"
 /*
-g++ -c main.cpp && g++ main.o Tela.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
+g++ -c main.cpp && g++ main.o screens.hpp Moto.cpp Fila.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
 
 */
 
