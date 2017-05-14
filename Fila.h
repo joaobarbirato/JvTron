@@ -6,26 +6,22 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-// Estrutura do nó
-struct Node{
-	sf::Vertex info;
-	struct Node *next;
-};
-typedef struct Node * NodePtr;
-
 // Estrutura da fila
 class Fila{
 private:
-	NodePtr primeiro;
-	NodePtr ultimo;
+	int primeiro;
+	int ultimo;
 	int nElementos;
+    sf::Vertex elementos[20000];
 public:
 	Fila();
 	~Fila();
 	void Insere( sf::Vertex &, bool &);
 	void Retira(sf::Vertex  &, bool &);
-	void RetiraAPartirDe(const int &, bool &);
+	void RetiraAteElemento(sf::Vertex & x, bool & deuCerto);
 	bool Vazia() const;
+    bool Cheia() const;
+    sf::Vertex* getDesenhoRastro();
 };
 
 #endif

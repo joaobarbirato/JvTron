@@ -5,72 +5,72 @@ using namespace std;
 	Implementação dos métodos da Fila
 */
 Fila::Fila(){ // Cria()
-	ultimo = NULL;
-	primeiro = NULL;
+	ultimo = 0;
+	primeiro = 0;
 	nElementos = 0;
 };
 
 bool Fila::Vazia() const {
-	if(primeiro == NULL)
+	if(nElementos == 0)
 		return true;
 	return false;
 };
-
+bool Fila::Cheia() const {
+	if(nElementos == 20000)
+		return true;
+	return false;
+};
 void Fila::Insere( sf::Vertex & x, bool& deuCerto){
-	NodePtr PAux = new Node;
-	if(PAux == NULL)
-		deuCerto = false;
-	else{
-		deuCerto = true;
-		PAux->info = x;
-		PAux->next = NULL;
-		if(Vazia()){
-			primeiro = PAux;
-            ultimo = PAux;
+	
+	if(Cheia())
+        deuCerto=false;
+    else{
+        deuCerto=true;
+        nElementos++;
+        elementos[ultimo]= x;
+        if(ultimo==nElementos-1){
+            ultimo=1;
         }else{
-            ultimo->next = PAux;
-            ultimo = PAux;
-            
+            ultimo++;
         }
-		nElementos++;
-	}
+        
+    }
 };
 
 void Fila::Retira(sf::Vertex & x, bool & deuCerto){
-	NodePtr PAux = new Node;
 	if(Vazia()){
 		deuCerto = false;
-	}else{
-		deuCerto = true;
-		x = primeiro->info;
-		PAux = primeiro;
-		primeiro = primeiro->next;
-		if(primeiro == NULL)
-			ultimo = NULL;
-		delete PAux;
-		nElementos--;
-	}
+    }else{
+        deuCerto=true;
+        nElementos--;
+        x=elementos[primeiro];
+        if(primeiro==nElementos-1){
+            primeiro=1;
+        }else{
+            primeiro++;
+        }
+    }
+        
 };
 	
 Fila::~Fila(){ // Destroi()
 	sf::Vertex x;
 	bool deuCerto = true;
-	while(!this->Vazia()){
-		this->Retira(x, deuCerto);
+	while(!Vazia()){
+		Retira(x, deuCerto);
 	}
 };
 
-void Fila::RetiraAPartirDe(const int & n, bool & deuCerto){
-	Fila F;
-	sf::Vertex x;
-	deuCerto = true;
-	for(int i = 0; i < (nElementos - n + 1); i++){
-		this->Retira(x, deuCerto);
-//		cout << x << endl;
-		if(!deuCerto){
-			i = (nElementos-n+1);
-		}else
-			F.Insere(x, deuCerto);
-	}
+void Fila::RetiraAteElemento(sf::Vertex & x, bool & deuCerto){
+	
+	sf::Vertex y;
+    do{
+        Retira(y,deuCerto);
+    }while(y.position!=x.position);
+
 };
 
+sf::Vertex* Fila::getDesenhoRastro(){
+    
+    return elementos;
+};

@@ -8,45 +8,40 @@ using namespace std;
 */
 
 void Moto::mudarCima(){
-    sf::Texture textura;
     sf::Sprite auxMoto;
     
-    textura.loadFromFile("cima.png");
-    auxMoto.setTexture(textura);
-    
-    if(posicao == 3){
-        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().x)/2 ,forma.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 ));
-    }
-    if(posicao == 1){
-        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().x)/2  , forma.getPosition().y + forma.getTexture()->getSize().y -  (auxMoto.getTexture()->getSize().y)/2) );
-    }
-    auxX=0;
-    auxY=(auxMoto.getTexture()->getSize().y)/2;
-    forma.setTexture(textura);
-    forma.setPosition(auxMoto.getPosition());
-    posicao=0;
-};
-void Moto::mudarBaixo(){
-    sf::Texture textura;
-    sf::Sprite auxMoto;
-    
-    textura.loadFromFile("baixo.png");
+    textura.loadFromFile("motoMovendo/cima.png");
     auxMoto.setTexture(textura);
     
     if(posicao == 0){
-        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x - (auxMoto.getTexture()->getSize().x)/2  ,forma.getPosition().y + (forma.getTexture()->getSize().y)/2 ));
+        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x - (forma.getTexture()->getSize().x)/2    ,forma.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 + 14  ));
+    }
+    if(posicao == 2){
+        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().x)/2  , forma.getPosition().y + forma.getTexture()->getSize().y -  (auxMoto.getTexture()->getSize().y)/2)  );
+    }
+    auxX=(auxMoto.getTexture()->getSize().x)/2;
+    auxY=(auxMoto.getTexture()->getSize().y)/2;
+    forma=auxMoto;
+    posicao=0;
+};
+void Moto::mudarBaixo(){
+    sf::Sprite auxMoto;
+    
+    textura.loadFromFile("motoMovendo/baixo.png");
+    auxMoto.setTexture(textura);
+    
+    if(posicao == 0){
+        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x - (auxMoto.getTexture()->getSize().x)/2  ,forma.getPosition().y + (forma.getTexture()->getSize().y)/2 -forma.getTexture()->getSize().x   + 2));
     }
     if(posicao == 2){
         auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + forma.getTexture()->getSize().x - (auxMoto.getTexture()->getSize().x)/2  , forma.getPosition().y + (forma.getTexture()->getSize().y)/2 ));
     }
     auxX= (auxMoto.getTexture()->getSize().x)/2;
     auxY=0;
-    forma.setTexture(textura);
-    forma.setPosition(auxMoto.getPosition());
+    forma=auxMoto;
     posicao=3;
 };
 void Moto::mudarDireita(){
-    sf::Texture textura;
     sf::Sprite auxMoto;
     
     textura.loadFromFile("motoMovendo/direita.png");
@@ -58,15 +53,13 @@ void Moto::mudarDireita(){
     if(posicao == 1){
         auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().x)/2  , forma.getPosition().y + forma.getTexture()->getSize().y - (auxMoto.getTexture()->getSize().y)/2) );
     }
-    auxX=0;
+    auxX=auxMoto.getTexture()->getSize().x;
     auxY=(auxMoto.getTexture()->getSize().y)/2;
-    forma.setTexture(textura);
-    forma.setPosition(auxMoto.getPosition());
+     forma=auxMoto;
     posicao=0;
     
 };
 void Moto::mudarEsquerda(){
-    sf::Texture textura;
     sf::Sprite auxMoto;
     
     textura.loadFromFile("motoMovendo/esquerda.png");
@@ -78,10 +71,9 @@ void Moto::mudarEsquerda(){
     if(posicao == 3){
         auxMoto.setPosition(sf::Vector2f(forma.getPosition().x - auxMoto.getTexture()->getSize().x + (forma.getTexture()->getSize().x)/2   , forma.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 ));
     }
-    auxX=auxMoto.getTexture()->getSize().x;
+    auxX=forma.getTexture()->getSize().x/2 + 14;
     auxY=(auxMoto.getTexture()->getSize().y)/2;
-    forma.setTexture(textura);
-    forma.setPosition(auxMoto.getPosition());
+     forma=auxMoto;
     posicao=2;
     
     
