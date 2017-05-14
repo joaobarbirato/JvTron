@@ -22,8 +22,12 @@ int main (){
     Screens.push_back(&s0);
     Campo s1;
     Screens.push_back(&s1);
+    Ganhou s2(App.getSize().x, App.getSize().y);
+    Screens.push_back(&s2);
+    Perdeu s3(App.getSize().x, App.getSize().y);
     //Main loop
     while (screen >= 0){
+//        s2.Run(App);
         std::cout<<screen<<std::endl;
         screen = Screens[screen]->Run(App);
     }

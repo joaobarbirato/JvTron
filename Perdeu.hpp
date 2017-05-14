@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-class Menu : public Tela{
+class Perdeu : public Tela{
 private:
 	const int maxNumeroItens;
 	int numeroItem;
@@ -12,8 +12,8 @@ private:
 	sf::Text *botao;
 	sf::Text titulo;
 public:
-	Menu(float larg, float alt);
-	~Menu();
+	Perdeu(float larg, float alt);
+	~Perdeu();
 	virtual int Run(sf::RenderWindow &App);
 	void MovaParaCima();
 	void MovaParaBaixo();
@@ -22,8 +22,8 @@ public:
 	void desenha(sf::RenderWindow &) const;
 };
 
-Menu::Menu(float larg, float alt): maxNumeroItens(3){
-	std::string texto[maxNumeroItens] = {"Jogar", "Opcoes", "Sair"};
+Perdeu::Perdeu(float larg, float alt): maxNumeroItens(2){
+	std::string texto[maxNumeroItens] = {"Jogar novamente", "Sair"};
 	numeroItem = 0;
 	botao = new sf::Text[maxNumeroItens];
 	largura = larg;
@@ -31,12 +31,13 @@ Menu::Menu(float larg, float alt): maxNumeroItens(3){
 	centrox = largura/2;
 	centroy = altura/2;
 
-	if (!fonte.loadFromFile("TRON.TTF")){
+	if (!fonte.loadFromFile("TRON.TTF"))
+	{
 		std::cerr << "Error loading verdanab.ttf" << std::endl;
 	}
 	// inicializando titulo
-	titulo.setCharacterSize(50);
-	titulo.setString("JvTron");
+	titulo.setCharacterSize(70);
+	titulo.setString("Perdeu!");
 	titulo.setFont(fonte);
 	titulo.setPosition(sf::Vector2f(centrox - titulo.getCharacterSize()*3, centroy-altura*1/3 + titulo.getCharacterSize() - 10));
 	titulo.setFillColor(sf::Color(0,255,255));
@@ -57,9 +58,9 @@ Menu::Menu(float larg, float alt): maxNumeroItens(3){
 
 }
 
-Menu::~Menu(){ delete botao; };
+Perdeu::~Perdeu(){ delete botao; };
 
-int Menu::Run(sf::RenderWindow &App){
+int Perdeu::Run(sf::RenderWindow &App){
 	// declaracao de variaveis
 	sf::Event Event;
 	bool Running = true;
@@ -86,8 +87,6 @@ int Menu::Run(sf::RenderWindow &App){
                             	return (1);
                                 break;
                             case 1:
-                                break;
-                            case 2:
                                 return (-1);
                                 break;
                         }
@@ -104,7 +103,7 @@ int Menu::Run(sf::RenderWindow &App){
             }
 		}// fim eventloop
 		//When getting at alpha_max, we stop modifying the sprite
-//      view.setCenter(menu.getCentro());
+//      view.setCenter(Perdeu.getCentro());
 //      App.setView(view);
 		App.clear();
 		desenha(App);
@@ -115,36 +114,16 @@ int Menu::Run(sf::RenderWindow &App){
 	return (-1);
 }
 
-void Menu::desenha(sf::RenderWindow & App) const{
-	sf::Vertex vertEsq[] =	{
-    	sf::Vertex(sf::Vector2f(50, altura/3), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(50, altura - 50), sf::Color(0,255,255))
-	};
-	sf::Vertex vertDir[] =	{
-	    sf::Vertex(sf::Vector2f(largura - 50, altura/3), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(largura - 50, altura - 50), sf::Color(0,255,255))
-	};
-	sf::Vertex horCima[] =	{
-	    sf::Vertex(sf::Vector2f(50, altura/3), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(largura - 50, altura/3), sf::Color(0,255,255))
-	};
-	sf::Vertex horBaixo[] =	{
-	    sf::Vertex(sf::Vector2f(50, altura - 50), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(largura - 50, altura - 50), sf::Color(0,255,255))
-	};
+void Perdeu::desenha(sf::RenderWindow & App) const{
 	//Clearing screen
     App.clear();
 	App.draw(titulo);
 	for(int i = 0; i < maxNumeroItens; i++){
 		App.draw(botao[i]);
 	}
-	App.draw(vertEsq, 2, sf::Lines);
-	App.draw(vertDir, 2, sf::Lines);
-	App.draw(horCima, 2, sf::Lines);
-	App.draw(horBaixo, 2, sf::Lines);
 };
 
-void Menu::MovaParaCima(){
+void Perdeu::MovaParaCima(){
 	if(numeroItem - 1 >= 0){
 		botao[numeroItem].setFillColor(sf::Color::White);
 		numeroItem--;
@@ -152,11 +131,11 @@ void Menu::MovaParaCima(){
 	}
 };
 
-void Menu::MovaParaBaixo(){
+void Perdeu::MovaParaBaixo(){
 	if(numeroItem + 1 < maxNumeroItens){
 		botao[numeroItem].setFillColor(sf::Color::White);
 		numeroItem++;
 		botao[numeroItem].setFillColor(sf::Color(0,255,255));
 	}
 };
-int Menu::ItemApertado(){ return numeroItem; };
+int Perdeu::ItemApertado(){ return numeroItem; };

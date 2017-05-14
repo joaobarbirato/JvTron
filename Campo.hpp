@@ -30,7 +30,8 @@ int Campo::Run(sf::RenderWindow &App){
 	bool Running = true;
 
 	while (Running){ // gameloop
-		while(App.pollEvent(Event)){ //
+		while(App.pollEvent(Event)){ // eventloop
+            // pensar em eventos pra Ganhou e Perdeu
             switch(Event.type){
                 //evento para fechar
                 case sf::Event::Closed:
@@ -126,7 +127,7 @@ void Campo::desenha(sf::RenderWindow & App) const{
     sf::Text titulo;
     sf::Font fonte;
 
-    fonte.loadFromFile("TRON.TTF");
+    if(!fonte.loadFromFile("TRON.TTF")){}
 
     titulo.setFont(fonte);
     titulo.setString("JvTron");
