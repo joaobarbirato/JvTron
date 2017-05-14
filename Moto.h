@@ -26,7 +26,8 @@ class Moto{
         void mudarEsquerda();
         void mudarDireita();
         
-        Fila getCauda();
+        void setPosicao(int);
+        
 
     private:
         Fila cauda;
@@ -35,7 +36,6 @@ class Moto{
         int auxX;
         int auxY;
         int posicao;
-        void adicionarCauda();
         
 };
 

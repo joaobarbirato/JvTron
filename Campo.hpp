@@ -9,7 +9,6 @@ private:
     Fila cauda;
     sf::Vertex auxCauda;
     bool ok;
-    bool deuCerto,deuCerto1;// contadores para rodar o vetor e adicionar por onde ele passa
 public:
 	Campo(void);
 	virtual int Run(sf::RenderWindow &App);
@@ -17,14 +16,15 @@ public:
 };
 
 Campo::Campo(void){
-    moto.mudarDireita();
+    
 
 }
 
 int Campo::Run(sf::RenderWindow &App){
 	sf::Event Event;
 	bool Running = true;
-
+    
+    this->moto.setPosicao(0);
 	while (Running){ // gameloop
 		while(App.pollEvent(Event)){ // eventloop
             // pensar em eventos pra Ganhou e Perdeu
@@ -109,7 +109,6 @@ int Campo::Run(sf::RenderWindow &App){
 
 void Campo::desenha(sf::RenderWindow & App) const{
     const float tamanhoFonte = 20;
-
     float largura = App.getSize().x;
     float altura = App.getSize().y;
     sf::Text titulo;
