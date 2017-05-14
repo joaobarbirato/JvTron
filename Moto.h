@@ -31,6 +31,7 @@ class Moto{
     private:
         Fila cauda;
         sf::Sprite forma;
+        sf::Texture textura;
         int auxX;
         int auxY;
         int posicao;
