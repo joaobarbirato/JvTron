@@ -89,25 +89,29 @@ void Moto::mudarEsquerda(){
 
 void Moto::moverCima(){
     forma.move(0.0f,-1.0f); 
-    adicionarCauda();
 };
 void Moto::moverBaixo(){
     forma.move(0.0f,1.0f); 
-    adicionarCauda();
 };
 void Moto::moverEsquerda(){
     forma.move(-1.0f,0.0f);
-    adicionarCauda();
 };
 void Moto::moverDireita(){
     forma.move(1.0f,0.0f);
-    adicionarCauda();
 };
  Fila Moto::getCauda(){
      
      return cauda;
 };
 
+int Moto::getAuxX(){
+    
+    return auxX;
+};
+int Moto::getAuxY(){
+    
+    return auxY;
+};
 
 void Moto::adicionarCauda(){
     sf::Vertex auxCauda;

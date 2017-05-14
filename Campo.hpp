@@ -8,6 +8,11 @@ private:
     Moto moto;
     sf::Vertex c;
     sf::Vertex primeiro;
+    sf::Vertex teste [100];
+    Fila cauda;
+    sf::Vertex auxCauda;
+    bool ok;
+    int i=0;
     bool deuCerto,deuCerto1;// contadores para rodar o vetor e adicionar por onde ele passa
 public:
 	Campo(void);
@@ -79,14 +84,31 @@ int Campo::Run(sf::RenderWindow &App){
             if (Event.key.code == sf::Keyboard::W){
                 moto.moverCima();
             }
+        
+            auxCauda.position=moto.getForma().getPosition();
+             auxCauda.position.y+=moto.getAuxY();
+             auxCauda.position.x+=moto.getAuxX();;
+            auxCauda.color = sf::Color(0,255,255);
+            cauda.Insere(auxCauda,ok);
+            i++;
+            
+                    printf("%i\n",i);
         }
     
         
         //desenha na tela o ratro e a moto
         desenha(App);
 //         ver funcionamento da cauda - a parte da info
-            moto.getCauda().Retira(c,deuCerto);
         
+        cauda.Retira(c,deuCerto);
+        primeiro=c;
+        cauda.Insere(c,deuCerto1);
+        do{
+            App.draw(&c,1,sf::Points);
+            cauda.Retira(c,deuCerto);
+            cauda.Insere(c,deuCerto1);
+            
+        }while(deuCerto && primeiro.position != c.position);
         App.draw(moto.getForma());
         App.display();
         //limpa a tela 

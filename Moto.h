@@ -17,7 +17,9 @@ class Moto{
         void moverBaixo();
         void moverEsquerda();
         void moverDireita();
-            
+        int getAuxX();
+        int getAuxY();
+        
         sf::Sprite getForma();
         void mudarCima();
         void mudarBaixo();
