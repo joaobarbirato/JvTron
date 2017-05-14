@@ -8,6 +8,5 @@
 #include "Menu.hpp"
 #include "Campo.hpp"
 #include "Ganhou.hpp"
-#include "Perdeu.hpp"
 #include "Moto.h"
 #endif // SCREENS_HPP_INCLUDED
