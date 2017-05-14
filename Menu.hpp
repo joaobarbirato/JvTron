@@ -31,7 +31,7 @@ Menu::Menu(float larg, float alt): maxNumeroItens(3){
 	centrox = largura/2;
 	centroy = altura/2;
 
-	if (!fonte.loadFromFile("TRON.TTF")){
+	if (!fonte.loadFromFile("Tr2n.ttf")){
 		std::cerr << "Error loading verdanab.ttf" << std::endl;
 	}
 	// inicializando titulo

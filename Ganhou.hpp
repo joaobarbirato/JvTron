@@ -33,7 +33,7 @@ Ganhou::Ganhou(float larg, float alt, sf::Color vcor): maxNumeroItens(2){
 	centroy = altura/2;
 	cor = vcor;
 
-	if (!fonte.loadFromFile("TRON.TTF"))
+	if (!fonte.loadFromFile("Tr2n.ttf"))
 	{
 		std::cerr << "Error loading verdanab.ttf" << std::endl;
 	}

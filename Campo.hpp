@@ -114,7 +114,7 @@ void Campo::desenha(sf::RenderWindow & App) const{
     sf::Text titulo;
     sf::Font fonte;
 
-    if(!fonte.loadFromFile("TRON.TTF")){}
+    if(!fonte.loadFromFile("Tr2n.ttf")){}
 
     titulo.setFont(fonte);
     titulo.setString("JvTron");
