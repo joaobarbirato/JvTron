@@ -35,16 +35,16 @@ Menu::Menu(float larg, float alt): maxNumeroItens(3){
 		std::cerr << "Error loading verdanab.ttf" << std::endl;
 	}
 	// inicializando titulo
-	titulo.setCharacterSize(50);
+	titulo.setCharacterSize(90);
 	titulo.setString("JvTron");
 	titulo.setFont(fonte);
-	titulo.setPosition(sf::Vector2f(centrox - titulo.getCharacterSize()*3, centroy-altura*1/3 + titulo.getCharacterSize() - 10));
+	titulo.setPosition(sf::Vector2f(centrox - titulo.getCharacterSize()*1.95, centroy-altura*1/3 + titulo.getCharacterSize() - 100));
 	titulo.setFillColor(sf::Color(0,255,255));
 
 	//inicializando botoes
 	for(int i = 0; i < maxNumeroItens; i++){
 		botao[i].setFont(fonte);
-		botao[i].setCharacterSize(20);
+		botao[i].setCharacterSize(40);
 
 		if(i == 0)
 			botao[i].setFillColor(sf::Color(0,255,255));
@@ -52,7 +52,7 @@ Menu::Menu(float larg, float alt): maxNumeroItens(3){
 			botao[i].setFillColor(sf::Color::White);
 
 		botao[i].setString(texto[i]);
-		botao[i].setPosition(sf::Vector2f(centrox - botao[i].getCharacterSize()*3, (altura-100)*2/3 + altura/(maxNumeroItens+1)/4*i));
+		botao[i].setPosition(sf::Vector2f(centrox - botao[i].getCharacterSize()*1.95, (altura-100)*2/3 + altura/(maxNumeroItens+1)/2.5*i - 80));
 	}
 
 }

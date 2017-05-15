@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Tela.hpp"
+#include "Disco.hpp"
 #include "Moto.h"
 #include <SFML/Graphics.hpp>
 
@@ -9,16 +10,14 @@ private:
     Fila cauda;
     sf::Vertex auxCauda;
     bool ok;
+    Disco d;
 public:
 	Campo(void);
 	virtual int Run(sf::RenderWindow &App);
 	void desenha(sf::RenderWindow &) const;
 };
 
-Campo::Campo(void){
-    
-
-}
+Campo::Campo(void){};
 
 int Campo::Run(sf::RenderWindow &App){
 	sf::Event Event;
@@ -92,11 +91,7 @@ int Campo::Run(sf::RenderWindow &App){
         
         //desenha na tela o ratro e a moto
         desenha(App);
-//         ver funcionamento da cauda - a parte da info
-        
-        
-        
-            
+        d.aparece( float(rand() % (App.getSize().x-50) + 50), float(rand() % (App.getSize().y-50)-20) + 50 , App);
         App.draw(cauda.getDesenhoRastro(),20000,sf::Points);
         App.draw(moto.getForma());
         App.display();
