@@ -11,8 +11,9 @@ private:
 	sf::Font fonte;
 	sf::Text *botao;
 	sf::Text titulo;
+	sf::Color cor;
 public:
-	Ganhou(float larg, float alt);
+	Ganhou(float larg, float alt, sf::Color vcor);
 	~Ganhou();
 	virtual int Run(sf::RenderWindow &App);
 	void MovaParaCima();
@@ -22,7 +23,7 @@ public:
 	void desenha(sf::RenderWindow &) const;
 };
 
-Ganhou::Ganhou(float larg, float alt): maxNumeroItens(2){
+Ganhou::Ganhou(float larg, float alt, sf::Color vcor): maxNumeroItens(2){
 	std::string texto[maxNumeroItens] = {"Jogar novamente", "Sair"};
 	numeroItem = 0;
 	botao = new sf::Text[maxNumeroItens];
@@ -30,30 +31,28 @@ Ganhou::Ganhou(float larg, float alt): maxNumeroItens(2){
 	altura = alt;
 	centrox = largura/2;
 	centroy = altura/2;
+	cor = vcor;
 
-	if (!fonte.loadFromFile("TRON.TTF"))
-	{
-		std::cerr << "Error loading verdanab.ttf" << std::endl;
-	}
+	if (!fonte.loadFromFile("Tr2n.ttf")){}
 	// inicializando titulo
-	titulo.setCharacterSize(70);
-	titulo.setString("Ganhou!");
+	titulo.setCharacterSize(100);
+	titulo.setString("Ganhou");
 	titulo.setFont(fonte);
-	titulo.setPosition(sf::Vector2f(centrox - titulo.getCharacterSize()*3, centroy-altura*1/3 + titulo.getCharacterSize() - 10));
-	titulo.setFillColor(sf::Color(0,255,255));
+	titulo.setPosition(sf::Vector2f(centrox - titulo.getCharacterSize()*1.95, centroy-altura*1/3 + titulo.getCharacterSize() - 10));
+	titulo.setFillColor(cor);
 
 	//inicializando botoes
 	for(int i = 0; i < maxNumeroItens; i++){
 		botao[i].setFont(fonte);
-		botao[i].setCharacterSize(20);
+		botao[i].setCharacterSize(40);
 
 		if(i == 0)
-			botao[i].setFillColor(sf::Color(0,255,255));
+			botao[i].setFillColor(cor);
 		else
 			botao[i].setFillColor(sf::Color::White);
 
 		botao[i].setString(texto[i]);
-		botao[i].setPosition(sf::Vector2f(centrox - botao[i].getCharacterSize()*3, (altura-100)*2/3 + altura/(maxNumeroItens+1)/4*i));
+		botao[i].setPosition(sf::Vector2f(centrox - botao[i].getCharacterSize()*5, (altura-100)*2/3 + altura/(maxNumeroItens+1)/4*i-20));
 	}
 
 }
@@ -115,19 +114,38 @@ int Ganhou::Run(sf::RenderWindow &App){
 }
 
 void Ganhou::desenha(sf::RenderWindow & App) const{
-	//Clearing screen
+	sf::Vertex vertEsq[] =	{
+    	sf::Vertex(sf::Vector2f(50, 50), cor),
+	    sf::Vertex(sf::Vector2f(50, altura - 50), cor)
+	};
+	sf::Vertex vertDir[] =	{
+	    sf::Vertex(sf::Vector2f(largura - 50, 50), cor),
+	    sf::Vertex(sf::Vector2f(largura - 50, altura - 50), cor)
+	};
+	sf::Vertex horCima[] =	{
+	    sf::Vertex(sf::Vector2f(50, 50), cor),
+	    sf::Vertex(sf::Vector2f(largura - 50, 50), cor)
+	};
+	sf::Vertex horBaixo[] =	{
+	    sf::Vertex(sf::Vector2f(50, altura - 50), cor),
+	    sf::Vertex(sf::Vector2f(largura - 50, altura - 50), cor)
+	};
     App.clear();
 	App.draw(titulo);
 	for(int i = 0; i < maxNumeroItens; i++){
 		App.draw(botao[i]);
 	}
+	App.draw(vertEsq, 2, sf::Lines);
+	App.draw(vertDir, 2, sf::Lines);
+	App.draw(horCima, 2, sf::Lines);
+	App.draw(horBaixo, 2, sf::Lines);
 };
 
 void Ganhou::MovaParaCima(){
 	if(numeroItem - 1 >= 0){
 		botao[numeroItem].setFillColor(sf::Color::White);
 		numeroItem--;
-		botao[numeroItem].setFillColor(sf::Color(0,255,255));
+		botao[numeroItem].setFillColor(cor);
 	}
 };
 
@@ -135,7 +153,7 @@ void Ganhou::MovaParaBaixo(){
 	if(numeroItem + 1 < maxNumeroItens){
 		botao[numeroItem].setFillColor(sf::Color::White);
 		numeroItem++;
-		botao[numeroItem].setFillColor(sf::Color(0,255,255));
+		botao[numeroItem].setFillColor(cor);
 	}
 };
 int Ganhou::ItemApertado(){ return numeroItem; };
