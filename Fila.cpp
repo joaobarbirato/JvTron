@@ -29,7 +29,7 @@ void Fila::Insere( sf::Vertex & x, bool& deuCerto){
         nElementos++;
         elementos[ultimo]= x;
         if(ultimo==nElementos-1){
-            ultimo=1;
+            ultimo=0;
         }else{
             ultimo++;
         }
@@ -37,7 +37,7 @@ void Fila::Insere( sf::Vertex & x, bool& deuCerto){
     }
 };
 
-void Fila::Retira(sf::Vertex & x, bool & deuCerto){
+void Fila::Retira(sf::Vertex &x, bool & deuCerto){
 	if(Vazia()){
 		deuCerto = false;
     }else{
@@ -45,7 +45,7 @@ void Fila::Retira(sf::Vertex & x, bool & deuCerto){
         nElementos--;
         x=elementos[primeiro];
         if(primeiro==nElementos-1){
-            primeiro=1;
+            primeiro=0;
         }else{
             primeiro++;
         }
@@ -57,7 +57,7 @@ Fila::~Fila(){ // Destroi()
 	sf::Vertex x;
 	bool deuCerto = true;
 	while(!Vazia()){
-		Retira(x, deuCerto);
+// 		Retira(x, deuCerto);
 	}
 };
 
@@ -73,4 +73,8 @@ void Fila::RetiraAteElemento(sf::Vertex & x, bool & deuCerto){
 sf::Vertex* Fila::getDesenhoRastro(){
     
     return elementos;
+};
+int Fila::getNElementos(){
+    return nElementos;
+    
 };

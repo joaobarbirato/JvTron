@@ -8,15 +8,12 @@ using namespace std;
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Fila.h"
-
+#include <string>
 
 class Moto{
     public:
         
-        void moverCima();
-        void moverBaixo();
-        void moverEsquerda();
-        void moverDireita();
+        void mover();
         int getAuxX();
         int getAuxY();
         
@@ -26,16 +23,16 @@ class Moto{
         void mudarEsquerda();
         void mudarDireita();
         
-        void setPosicao(int);
-        
-
+        void setPosicaoInicial(int,sf::Vector2f);
+        void setCor(string);
+        int posicao;
     private:
         Fila cauda;
         sf::Sprite forma;
         sf::Texture textura;
         int auxX;
         int auxY;
-        int posicao;
+        string cor;
         
 };
 

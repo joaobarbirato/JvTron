@@ -21,6 +21,7 @@ public:
 	void RetiraAteElemento(sf::Vertex & x, bool & deuCerto);
 	bool Vazia() const;
     bool Cheia() const;
+    int getNElementos();
     sf::Vertex* getDesenhoRastro();
 };
 

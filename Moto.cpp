@@ -10,7 +10,7 @@ using namespace std;
 void Moto::mudarCima(){
     sf::Sprite auxMoto;
     
-    textura.loadFromFile("motoMovendo/cima.png");
+    textura.loadFromFile(cor+"/cima.png");
     auxMoto.setTexture(textura);
     
     if(posicao == 0){
@@ -29,7 +29,7 @@ void Moto::mudarCima(){
 void Moto::mudarBaixo(){
     sf::Sprite auxMoto;
     
-    textura.loadFromFile("motoMovendo/baixo.png");
+    textura.loadFromFile(cor+"/baixo.png");
     auxMoto.setTexture(textura);
     
     if(posicao == 0){
@@ -49,7 +49,7 @@ void Moto::mudarBaixo(){
 void Moto::mudarDireita(){
     sf::Sprite auxMoto;
     
-    textura.loadFromFile("motoMovendo/direita.png");
+    textura.loadFromFile(cor+"/direita.png");
     auxMoto.setTexture(textura);
     
     if(posicao == 3){
@@ -70,7 +70,7 @@ void Moto::mudarDireita(){
 void Moto::mudarEsquerda(){
     sf::Sprite auxMoto;
     
-    textura.loadFromFile("motoMovendo/esquerda.png");
+    textura.loadFromFile(cor+"/esquerda.png");
     auxMoto.setTexture(textura);
     
     if(posicao == 1){
@@ -89,20 +89,17 @@ void Moto::mudarEsquerda(){
     
     
 };
-
-void Moto::moverCima(){
-    forma.move(0.0f,-1.0f); 
+void Moto::mover(){
+    if(posicao == 0)
+            forma.move(0.5f,0.0f);
+    if(posicao == 1)
+            forma.move(0.0f,-0.5f); 
+    if(posicao == 2)
+            forma.move(-0.5f,0.0f);
+    if(posicao == 3){
+            forma.move(0.0f,0.5f);
+    }
 };
-void Moto::moverBaixo(){
-    forma.move(0.0f,1.0f); 
-};
-void Moto::moverEsquerda(){
-    forma.move(-1.0f,0.0f);
-};
-void Moto::moverDireita(){
-    forma.move(1.0f,0.0f);
-};
-
 int Moto::getAuxX(){
     
     return auxX;
@@ -117,7 +114,12 @@ sf::Sprite Moto::getForma(){
     return forma;
 }
 
-void Moto::setPosicao(int x){
+void Moto::setPosicaoInicial(int x,sf::Vector2f vetor){
     posicao=x;
-    forma.setPosition(sf::Vector2f(60,70));
+    forma.setPosition(vetor);
 }
+
+void Moto::setCor(string c){
+    cor=c;
+    
+};

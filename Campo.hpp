@@ -1,14 +1,43 @@
 #include <iostream>
+#include <fstream>
 #include "Tela.hpp"
 #include "Moto.h"
+#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
+enum InputType
+{
+    KeyboardInput
+};
+ 
+struct MyKeys
+{
+    InputType myInputType;
+    sf::Event::EventType myEventType;
+    sf::Keyboard::Key myKeyCode;
+};
+bool TestEvent(MyKeys k, sf::Event e)
+{
+    // Keyboard event
+    if (k.myInputType == KeyboardInput &&
+        k.myEventType == e.type &&
+        k.myKeyCode == e.key.code)
+    {
+        return (true);
+    }
+    return (false);
+};
 class Campo : public Tela{
 private:
     Moto moto;
+    Moto moto2;
     Fila cauda;
+    Fila cauda2;
+    Fila aux,aux1;
     sf::Vertex auxCauda;
     bool ok;
+    int j=0;
+    sf::RectangleShape s,s1;
 public:
 	Campo(void);
 	virtual int Run(sf::RenderWindow &App);
@@ -16,7 +45,6 @@ public:
 };
 
 Campo::Campo(void){
-    
 
 }
 
@@ -24,7 +52,59 @@ int Campo::Run(sf::RenderWindow &App){
 	sf::Event Event;
 	bool Running = true;
     
-    this->moto.setPosicao(0);
+    moto.setCor("Verde");
+    moto2.setCor("Laranja");
+    moto.mudarDireita();
+    moto2.mudarEsquerda();
+    this->moto.setPosicaoInicial(0,sf::Vector2f(60,60));
+    this->moto2.setPosicaoInicial(2,sf::Vector2f(680,490));
+    printf("%i %i",this->moto.getForma().getPosition().x,this->moto.getForma().getPosition().y);
+    
+    std::map<std::string,MyKeys> Keys;
+    MyKeys key;
+
+    key.myInputType = KeyboardInput;
+    key.myEventType = sf::Event::KeyPressed;
+    key.myKeyCode = sf::Keyboard::D;
+    Keys["Moto1-Direita"] = key;
+
+    key.myInputType = KeyboardInput;
+    key.myEventType = sf::Event::KeyPressed;
+    key.myKeyCode = sf::Keyboard::A;
+    Keys["Moto1-Esquerda"] = key;
+
+    key.myInputType = KeyboardInput;
+    key.myEventType = sf::Event::KeyPressed;
+    key.myKeyCode = sf::Keyboard::S;
+    Keys["Moto1-Baixo"] = key;
+    
+    key.myInputType = KeyboardInput;
+    key.myEventType = sf::Event::KeyPressed;
+    key.myKeyCode = sf::Keyboard::W;
+    Keys["Moto1-Cima"] = key;
+    
+    key.myInputType = KeyboardInput;
+    key.myEventType = sf::Event::KeyPressed;
+    key.myKeyCode = sf::Keyboard::K;
+    Keys["Moto2-Baixo"] = key;
+
+    key.myInputType = KeyboardInput;
+    key.myEventType = sf::Event::KeyPressed;
+    key.myKeyCode = sf::Keyboard::L;
+    Keys["Moto2-Direita"] = key;
+
+    key.myInputType = KeyboardInput;
+    key.myEventType = sf::Event::KeyPressed;
+    key.myKeyCode = sf::Keyboard::J;
+    Keys["Moto2-Esquerda"] = key;
+    
+    key.myInputType = KeyboardInput;
+    key.myEventType = sf::Event::KeyPressed;
+    key.myKeyCode = sf::Keyboard::I;
+    Keys["Moto2-Cima"] = key;  
+    
+    
+    
 	while (Running){ // gameloop
 		while(App.pollEvent(Event)){ // eventloop
             // pensar em eventos pra Ganhou e Perdeu
@@ -42,62 +122,92 @@ int Campo::Run(sf::RenderWindow &App){
                     if(Event.text.unicode < 128)
                         printf("%c",Event.text.unicode);         
                     break;
-                case sf::Event::KeyPressed:
-                    switch(Event.key.code){
-                        case sf::Keyboard::End:
-                            return 0;
-                            break;
-                        
-                        case sf::Keyboard::A:
-                            moto.mudarEsquerda();
-                            break;
-                        case sf::Keyboard::S:
-                            moto.mudarBaixo();
-                            break;
-                        case sf::Keyboard::D:
-                            moto.mudarDireita();
-                            break;
-                        case sf::Keyboard::W:
-                            moto.mudarCima();
-                            break;
-                    }
-                    break;
+               
+            }
+            if (TestEvent(Keys["Moto1-Direita"], Event))
+            {
+                moto.mudarDireita();
+                
+            }
+            if (TestEvent(Keys["Moto1-Esquerda"], Event))
+            {
+               moto.mudarEsquerda(); 
+            }
+            if (TestEvent(Keys["Moto1-Cima"], Event))
+            {
+                moto.mudarCima();
+            }
+            if (TestEvent(Keys["Moto1-Baixo"], Event))
+            {
+                moto.mudarBaixo();
+            }
+            if (TestEvent(Keys["Moto2-Direita"], Event))
+            {
+                moto2.mudarDireita();
+                
+            }
+            if (TestEvent(Keys["Moto2-Esquerda"], Event))
+            {
+               moto2.mudarEsquerda(); 
+            }
+            if (TestEvent(Keys["Moto2-Cima"], Event))
+            {
+                moto2.mudarCima();
+            }
+            if (TestEvent(Keys["Moto2-Baixo"], Event))
+            {
+                moto2.mudarBaixo();
             }
         }
-        if (Event.type == sf::Event::KeyReleased ){
-            //caso a pessoa aperte o A
-            if (Event.key.code == sf::Keyboard::A){
-                moto.moverEsquerda();
-            }
-            //caso a pessoa aperte o S
-            if (Event.key.code == sf::Keyboard::S){
-                moto.moverBaixo();
-            }
-            //caso a pessoa aperte o D
-            if (Event.key.code == sf::Keyboard::D){
-                moto.moverDireita();
-            }   
-            //caso a pessoa aperte o D
-            if (Event.key.code == sf::Keyboard::W){
-                moto.moverCima();
-            }
         
+            moto2.mover();
+            moto.mover();
+         
             auxCauda.position=moto.getForma().getPosition();
             auxCauda.position.y+=moto.getAuxY();
             auxCauda.position.x+=moto.getAuxX();;
             auxCauda.color = sf::Color(0,255,255);
             cauda.Insere(auxCauda,ok);
-        }
-    
+            auxCauda.position=moto2.getForma().getPosition();
+            auxCauda.position.y+=moto2.getAuxY();
+            auxCauda.position.x+=moto2.getAuxX();;
+            auxCauda.color = sf::Color(255,60,0);
+            cauda2.Insere(auxCauda,ok);
+            
+        
         
         //desenha na tela o ratro e a moto
         desenha(App);
 //         ver funcionamento da cauda - a parte da info
+        aux=cauda;
+        aux1=cauda2;
         
+        s.setSize(sf::Vector2f(1,1));
+        s1.setSize(sf::Vector2f(1,1));
+        for(j=0;j<cauda.getNElementos() - 100;j++){
+            aux.Retira(auxCauda,ok);
+            s.setPosition(auxCauda.position);
+            aux1.Retira(auxCauda,ok);
+            s1.setPosition(auxCauda.position);
+            if(moto.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) || moto.getForma().getGlobalBounds().intersects(s1.getGlobalBounds())  ){
+                 printf("Fudeu 1 \n");    
+                 return 2;
+                  break;
+                  
+            }
+            printf("%i\n",j);
+            if(moto2.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) || moto2.getForma().getGlobalBounds().intersects(s1.getGlobalBounds()) ){
+                 printf("Fudeu 2 \n");
+                 return 2;
+                 break;
+            }   
+        }
         
+      
         
-            
+        App.draw(cauda2.getDesenhoRastro(),20000,sf::Points);
         App.draw(cauda.getDesenhoRastro(),20000,sf::Points);
+        App.draw(moto2.getForma());
         App.draw(moto.getForma());
         App.display();
         //limpa a tela 
@@ -113,7 +223,7 @@ void Campo::desenha(sf::RenderWindow & App) const{
     float altura = App.getSize().y;
     sf::Text titulo;
     sf::Font fonte;
-
+    
     if(!fonte.loadFromFile("TRON.TTF")){}
 
     titulo.setFont(fonte);
@@ -174,3 +284,4 @@ void Campo::desenha(sf::RenderWindow & App) const{
     App.draw(horBaixo2, 2, sf::Lines);
     return;
 }
+
