@@ -37,25 +37,16 @@ private:
     Fila aux,aux1;
     sf::Vertex auxCauda;
     bool ok;
-<<<<<<< HEAD
     int j=0;
     sf::RectangleShape s,s1;
-=======
     Disco d;
->>>>>>> bfb9a25e76e1354d1d4a5562491a1330e49c25a1
 public:
 	Campo(void);
 	virtual int Run(sf::RenderWindow &App);
 	void desenha(sf::RenderWindow &) const;
 };
 
-<<<<<<< HEAD
-Campo::Campo(void){
-
-}
-=======
 Campo::Campo(void){};
->>>>>>> bfb9a25e76e1354d1d4a5562491a1330e49c25a1
 
 int Campo::Run(sf::RenderWindow &App){
 	sf::Event Event;
@@ -187,7 +178,6 @@ int Campo::Run(sf::RenderWindow &App){
         
         //desenha na tela o ratro e a moto
         desenha(App);
-<<<<<<< HEAD
 //         ver funcionamento da cauda - a parte da info
         aux=cauda;
         aux1=cauda2;
@@ -201,7 +191,7 @@ int Campo::Run(sf::RenderWindow &App){
             s1.setPosition(auxCauda.position);
             if(moto.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) || moto.getForma().getGlobalBounds().intersects(s1.getGlobalBounds())  ){
                  printf("Fudeu 1 \n");    
-                 return 2;
+                 return 3;
                   break;
                   
             }
@@ -216,9 +206,7 @@ int Campo::Run(sf::RenderWindow &App){
       
         
         App.draw(cauda2.getDesenhoRastro(),20000,sf::Points);
-=======
-        d.aparece( float(rand() % (App.getSize().x-50) + 50), float(rand() % (App.getSize().y-50)-20) + 50 , App);
->>>>>>> bfb9a25e76e1354d1d4a5562491a1330e49c25a1
+//        d.aparece( float(rand() % (App.getSize().x-50) + 50), float(rand() % (App.getSize().y-50)-20) + 50 , App);
         App.draw(cauda.getDesenhoRastro(),20000,sf::Points);
         App.draw(moto2.getForma());
         App.draw(moto.getForma());
@@ -236,13 +224,8 @@ void Campo::desenha(sf::RenderWindow & App) const{
     float altura = App.getSize().y;
     sf::Text titulo;
     sf::Font fonte;
-<<<<<<< HEAD
     
-    if(!fonte.loadFromFile("TRON.TTF")){}
-=======
-
     if(!fonte.loadFromFile("Tr2n.ttf")){}
->>>>>>> bfb9a25e76e1354d1d4a5562491a1330e49c25a1
 
     titulo.setFont(fonte);
     titulo.setString("JvTron");
