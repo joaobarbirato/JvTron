@@ -7,7 +7,7 @@ using namespace std;
 */
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Fila.h"
+#include "Fila.hpp"
 #include <string>
 
 class Moto{
@@ -27,7 +27,7 @@ class Moto{
         void setCor(string);
         int posicao;
     private:
-        Fila cauda;
+        Fila<sf::Vertex> cauda;
         sf::Sprite forma;
         sf::Texture textura;
         int auxX;

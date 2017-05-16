@@ -6,19 +6,17 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
-enum InputType
-{
+enum InputType{
     KeyboardInput
 };
  
-struct MyKeys
-{
+struct MyKeys{
     InputType myInputType;
     sf::Event::EventType myEventType;
     sf::Keyboard::Key myKeyCode;
 };
-bool TestEvent(MyKeys k, sf::Event e)
-{
+
+bool TestEvent(MyKeys k, sf::Event e){
     // Keyboard event
     if (k.myInputType == KeyboardInput &&
         k.myEventType == e.type &&
@@ -28,37 +26,43 @@ bool TestEvent(MyKeys k, sf::Event e)
     }
     return (false);
 };
+
 class Campo : public Tela{
 private:
-    Moto moto;
-    Moto moto2;
-    Fila cauda;
-    Fila cauda2;
-    Fila aux,aux1;
+    Moto tron;
+    Moto rinz;
+    Fila<sf::Vertex> cauda;
+    Fila<sf::Vertex> cauda2;
+    Fila<sf::Vertex> aux,aux1;
     sf::Vertex auxCauda;
     bool ok;
+    int i=0;
     int j=0;
     sf::RectangleShape s,s1;
+
     Disco d;
+    Fila<sf::Sprite> FSpriteT, FSpriteR;
+    sf::Vector2f inicioTron, inicioRinz;
 public:
-	Campo(void);
-	virtual int Run(sf::RenderWindow &App);
-	void desenha(sf::RenderWindow &) const;
+    Campo(void);
+    virtual int Run(sf::RenderWindow &App);
+    void desenha(sf::RenderWindow &) const;
 };
 
 Campo::Campo(void){};
 
 int Campo::Run(sf::RenderWindow &App){
-	sf::Event Event;
-	bool Running = true;
+    sf::Event Event;
+    sf::Sprite SAux;
+    bool Running = true;
     
-    moto.setCor("Verde");
-    moto2.setCor("Laranja");
-    moto.mudarDireita();
-    moto2.mudarEsquerda();
-    this->moto.setPosicaoInicial(0,sf::Vector2f(60,60));
-    this->moto2.setPosicaoInicial(2,sf::Vector2f(680,490));
-    printf("%i %i",this->moto.getForma().getPosition().x,this->moto.getForma().getPosition().y);
+    tron.setCor("Verde");
+    rinz.setCor("Laranja");
+    tron.mudarDireita();
+    rinz.mudarEsquerda();
+    this->tron.setPosicaoInicial(0,sf::Vector2f(60,60));
+    this->rinz.setPosicaoInicial(2,sf::Vector2f(680,490));
+    printf("%i %i",this->tron.getForma().getPosition().x,this->tron.getForma().getPosition().y);
     
     std::map<std::string,MyKeys> Keys;
     MyKeys key;
@@ -66,47 +70,46 @@ int Campo::Run(sf::RenderWindow &App){
     key.myInputType = KeyboardInput;
     key.myEventType = sf::Event::KeyPressed;
     key.myKeyCode = sf::Keyboard::D;
-    Keys["Moto1-Direita"] = key;
+    Keys["tron-Direita"] = key;
 
     key.myInputType = KeyboardInput;
     key.myEventType = sf::Event::KeyPressed;
     key.myKeyCode = sf::Keyboard::A;
-    Keys["Moto1-Esquerda"] = key;
+    Keys["tron-Esquerda"] = key;
 
     key.myInputType = KeyboardInput;
     key.myEventType = sf::Event::KeyPressed;
     key.myKeyCode = sf::Keyboard::S;
-    Keys["Moto1-Baixo"] = key;
+    Keys["tron-Baixo"] = key;
     
     key.myInputType = KeyboardInput;
     key.myEventType = sf::Event::KeyPressed;
     key.myKeyCode = sf::Keyboard::W;
-    Keys["Moto1-Cima"] = key;
+    Keys["tron-Cima"] = key;
     
     key.myInputType = KeyboardInput;
     key.myEventType = sf::Event::KeyPressed;
     key.myKeyCode = sf::Keyboard::K;
-    Keys["Moto2-Baixo"] = key;
+    Keys["rinz-Baixo"] = key;
 
     key.myInputType = KeyboardInput;
     key.myEventType = sf::Event::KeyPressed;
     key.myKeyCode = sf::Keyboard::L;
-    Keys["Moto2-Direita"] = key;
+    Keys["rinz-Direita"] = key;
 
     key.myInputType = KeyboardInput;
     key.myEventType = sf::Event::KeyPressed;
     key.myKeyCode = sf::Keyboard::J;
-    Keys["Moto2-Esquerda"] = key;
+    Keys["rinz-Esquerda"] = key;
     
     key.myInputType = KeyboardInput;
     key.myEventType = sf::Event::KeyPressed;
     key.myKeyCode = sf::Keyboard::I;
-    Keys["Moto2-Cima"] = key;  
+    Keys["rinz-Cima"] = key;  
     
-    
-    
-	while (Running){ // gameloop
-		while(App.pollEvent(Event)){ // eventloop
+
+    while (Running){ // gameloop
+        while(App.pollEvent(Event)){ // eventloop
             // pensar em eventos pra Ganhou e Perdeu
             switch(Event.type){
                 //evento para fechar
@@ -124,64 +127,88 @@ int Campo::Run(sf::RenderWindow &App){
                     break;
                
             }
-            if (TestEvent(Keys["Moto1-Direita"], Event))
+
+            if (TestEvent(Keys["tron-Direita"], Event)){
+                tron.mudarDireita();
+            }
+            if (TestEvent(Keys["tron-Esquerda"], Event)){
+               tron.mudarEsquerda(); 
+            }
+            if (TestEvent(Keys["tron-Cima"], Event))
             {
-                moto.mudarDireita();
+                tron.mudarCima();
+            }
+            if (TestEvent(Keys["tron-Baixo"], Event))
+            {
+                tron.mudarBaixo();
+            }
+            if (TestEvent(Keys["rinz-Direita"], Event))
+            {
+                rinz.mudarDireita();
                 
             }
-            if (TestEvent(Keys["Moto1-Esquerda"], Event))
+            if (TestEvent(Keys["rinz-Esquerda"], Event))
             {
-               moto.mudarEsquerda(); 
+               rinz.mudarEsquerda(); 
             }
-            if (TestEvent(Keys["Moto1-Cima"], Event))
+            if (TestEvent(Keys["rinz-Cima"], Event))
             {
-                moto.mudarCima();
+                rinz.mudarCima();
             }
-            if (TestEvent(Keys["Moto1-Baixo"], Event))
+            if (TestEvent(Keys["rinz-Baixo"], Event))
             {
-                moto.mudarBaixo();
-            }
-            if (TestEvent(Keys["Moto2-Direita"], Event))
-            {
-                moto2.mudarDireita();
-                
-            }
-            if (TestEvent(Keys["Moto2-Esquerda"], Event))
-            {
-               moto2.mudarEsquerda(); 
-            }
-            if (TestEvent(Keys["Moto2-Cima"], Event))
-            {
-                moto2.mudarCima();
-            }
-            if (TestEvent(Keys["Moto2-Baixo"], Event))
-            {
-                moto2.mudarBaixo();
+                rinz.mudarBaixo();
             }
         }
         
-            moto2.mover();
-            moto.mover();
-         
-            auxCauda.position=moto.getForma().getPosition();
-            auxCauda.position.y+=moto.getAuxY();
-            auxCauda.position.x+=moto.getAuxX();;
-            auxCauda.color = sf::Color(0,255,255);
-            cauda.Insere(auxCauda,ok);
-            auxCauda.position=moto2.getForma().getPosition();
-            auxCauda.position.y+=moto2.getAuxY();
-            auxCauda.position.x+=moto2.getAuxX();;
-            auxCauda.color = sf::Color(255,60,0);
-            cauda2.Insere(auxCauda,ok);
+        rinz.mover();
+        tron.mover();
+     
+        auxCauda.position=tron.getForma().getPosition();
+        auxCauda.position.y+=tron.getAuxY();
+        auxCauda.position.x+=tron.getAuxX();;
+        auxCauda.color = sf::Color(0,255,255);
+        cauda.Insere(auxCauda,ok);
+        auxCauda.position=rinz.getForma().getPosition();
+        auxCauda.position.y+=rinz.getAuxY();
+        auxCauda.position.x+=rinz.getAuxX();;
+        auxCauda.color = sf::Color(255,60,0);
+        cauda2.Insere(auxCauda,ok);
             
         
         
-        //desenha na tela o ratro e a moto
+        //desenha na tela o ratro e a tron
         desenha(App);
 //         ver funcionamento da cauda - a parte da info
         aux=cauda;
         aux1=cauda2;
         
+        // Dinâmica de inserir sprites p/ verificacao de colisoes
+        if(!i){ // guardar a primeira posicao
+            inicioTron = tron.getForma().getPosition();
+            inicioRinz = rinz.getForma().getPosition();
+        }else{
+            if(i == 500|| TestEvent(Keys["tron-Direita"], Event) 
+                       || TestEvent(Keys["tron-Esquerda"], Event) 
+                       || TestEvent(Keys["tron-Baixo"], Event)
+                       || TestEvent(Keys["tron-Cima"], Event)){ // 50 ou se a tron vira
+                SAux.setPosition(inicioTron -  tron.getForma().getPosition());
+                SAux.setColor(sf::Color(0,255,255));
+                std::cout<<"inseriu tron"<<std::endl;
+                FSpriteT.Insere(SAux, ok);
+            }
+            if(i == 500|| TestEvent(Keys["rinz-Direita"], Event) 
+                       || TestEvent(Keys["rinz-Esquerda"], Event) 
+                       || TestEvent(Keys["rinz-Baixo"], Event)
+                       || TestEvent(Keys["rinz-Cima"], Event)){ // 50 ou se a tron vira
+                SAux.setPosition(inicioRinz - rinz.getForma().getPosition());
+                SAux.setColor(sf::Color(255,60,0));
+                std::cout<<"inseriu rinzzler"<<std::endl;
+                FSpriteR.Insere(SAux, ok);
+                i = 0;
+            }
+        }
+
         s.setSize(sf::Vector2f(1,1));
         s1.setSize(sf::Vector2f(1,1));
         for(j=0;j<cauda.getNElementos() - 100;j++){
@@ -189,14 +216,13 @@ int Campo::Run(sf::RenderWindow &App){
             s.setPosition(auxCauda.position);
             aux1.Retira(auxCauda,ok);
             s1.setPosition(auxCauda.position);
-            if(moto.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) || moto.getForma().getGlobalBounds().intersects(s1.getGlobalBounds())  ){
+            if(tron.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(s1.getGlobalBounds())  ){
                  printf("Fudeu 1 \n");    
                  return 3;
                   break;
-                  
             }
-            printf("%i\n",j);
-            if(moto2.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) || moto2.getForma().getGlobalBounds().intersects(s1.getGlobalBounds()) ){
+//            printf("%i\n",j);
+            if(rinz.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) || rinz.getForma().getGlobalBounds().intersects(s1.getGlobalBounds()) ){
                  printf("Fudeu 2 \n");
                  return 2;
                  break;
@@ -205,17 +231,18 @@ int Campo::Run(sf::RenderWindow &App){
         
       
         
-        App.draw(cauda2.getDesenhoRastro(),20000,sf::Points);
+        App.draw(cauda2.getDesenhoRastro(),cauda2.getNElementos(),sf::Points);
 //        d.aparece( float(rand() % (App.getSize().x-50) + 50), float(rand() % (App.getSize().y-50)-20) + 50 , App);
-        App.draw(cauda.getDesenhoRastro(),20000,sf::Points);
-        App.draw(moto2.getForma());
-        App.draw(moto.getForma());
+        App.draw(cauda.getDesenhoRastro(),cauda.getNElementos(),sf::Points);
+        App.draw(rinz.getForma());
+        App.draw(tron.getForma());
         App.display();
         //limpa a tela 
         App.clear();
-	}
-	//Never reaching this point normally, but just in case, exit the application
-	return -1;
+        i++;
+    }
+    //Never reaching this point normally, but just in case, exit the application
+    return -1;
 }
 
 void Campo::desenha(sf::RenderWindow & App) const{
@@ -273,7 +300,7 @@ void Campo::desenha(sf::RenderWindow & App) const{
         sf::Vertex(sf::Vector2f(largura - 40, altura*4/5 - 40), sf::Color(0,255,255))
     };
 
-    //desenha na tela o ratro e a moto
+    //desenha na tela o ratro e a tron
     App.draw(titulo);
     App.draw(vertEsq1, 2, sf::Lines);
     App.draw(vertEsq2, 2, sf::Lines);
@@ -285,4 +312,3 @@ void Campo::desenha(sf::RenderWindow & App) const{
     App.draw(horBaixo2, 2, sf::Lines);
     return;
 }
-

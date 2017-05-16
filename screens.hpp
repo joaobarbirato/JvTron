@@ -7,6 +7,7 @@
 //Including each screen of application
 #include "Menu.hpp"
 #include "Campo.hpp"
+#include "Regras.hpp"
 #include "Ganhou.hpp"
 #include "Moto.h"
 #endif // SCREENS_HPP_INCLUDED

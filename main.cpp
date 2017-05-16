@@ -26,6 +26,8 @@ int main (){
     Screens.push_back(s2);
     Ganhou * s3 = new Ganhou(App.getSize().x, App.getSize().y, sf::Color(250, 110, 40));
     Screens.push_back(s3);
+    Regras * s4 = new Regras(App.getSize().x, App.getSize().y, sf::Color(0, 255, 255));
+    Screens.push_back(s4);
     //Main loop
     while (screen >= 0){
         std::cout<<screen<<std::endl;

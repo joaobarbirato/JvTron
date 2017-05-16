@@ -23,7 +23,7 @@ public:
 };
 
 Menu::Menu(float larg, float alt): maxNumeroItens(3){
-	std::string texto[maxNumeroItens] = {"Jogar", "Opcoes", "Sair"};
+	std::string texto[maxNumeroItens] = {"Jogar", "Regras", "Sair"};
 	numeroItem = 0;
 	botao = new sf::Text[maxNumeroItens];
 	largura = larg;
@@ -86,6 +86,7 @@ int Menu::Run(sf::RenderWindow &App){
                             	return (1);
                                 break;
                             case 1:
+                            	return (4);
                                 break;
                             case 2:
                                 return (-1);
