@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include "Tela.hpp"
+#include "Moto.hpp"
 #include "Disco.hpp"
-#include "Moto.h"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -29,8 +29,8 @@ bool TestEvent(MyKeys k, sf::Event e){
 
 class Campo : public Tela{
 private:
-    Moto tron;
-    Moto rinz;
+    Moto tron; //(sf::Color(0,255,255));
+    Moto rinz; //(sf::Color(255,60,0));
     Fila<sf::Vertex> cauda;
     Fila<sf::Vertex> cauda2;
     Fila<sf::Vertex> aux,aux1;
@@ -43,6 +43,8 @@ private:
     Disco d;
     Fila<sf::Sprite> FSpriteT, FSpriteR;
     sf::Vector2f inicioTron, inicioRinz;
+
+    void DinamicaSprite(Fila<sf::Sprite>&,int&, sf::Vector2f&, Moto&);
 public:
     Campo(void);
     virtual int Run(sf::RenderWindow &App);
@@ -55,9 +57,9 @@ int Campo::Run(sf::RenderWindow &App){
     sf::Event Event;
     sf::Sprite SAux;
     bool Running = true;
-    
     tron.setCor("Verde");
     rinz.setCor("Laranja");
+    
     tron.mudarDireita();
     rinz.mudarEsquerda();
     this->tron.setPosicaoInicial(0,sf::Vector2f(60,60));
@@ -127,36 +129,35 @@ int Campo::Run(sf::RenderWindow &App){
                     break;
                
             }
-
+            // teclas tron
             if (TestEvent(Keys["tron-Direita"], Event)){
+//                DinamicaSprite(FSpriteT, FSpriteR, i, inicioTron, inicioRinz);
                 tron.mudarDireita();
             }
             if (TestEvent(Keys["tron-Esquerda"], Event)){
-               tron.mudarEsquerda(); 
+//                DinamicaSprite(FSpriteT, FSpriteR, i, inicioTron, inicioRinz);
+                tron.mudarEsquerda(); 
             }
-            if (TestEvent(Keys["tron-Cima"], Event))
-            {
+            if (TestEvent(Keys["tron-Cima"], Event)){
+//                DinamicaSprite(FSpriteT, FSpriteR, i, inicioTron, inicioRinz);
                 tron.mudarCima();
             }
-            if (TestEvent(Keys["tron-Baixo"], Event))
-            {
+            if (TestEvent(Keys["tron-Baixo"], Event)){
+//                DinamicaSprite(FSpriteT, FSpriteR, i, inicioTron, inicioRinz);
                 tron.mudarBaixo();
             }
-            if (TestEvent(Keys["rinz-Direita"], Event))
-            {
+
+            // teclas rinzzler
+            if (TestEvent(Keys["rinz-Direita"], Event)){
                 rinz.mudarDireita();
-                
             }
-            if (TestEvent(Keys["rinz-Esquerda"], Event))
-            {
+            if (TestEvent(Keys["rinz-Esquerda"], Event)){
                rinz.mudarEsquerda(); 
             }
-            if (TestEvent(Keys["rinz-Cima"], Event))
-            {
+            if (TestEvent(Keys["rinz-Cima"], Event)){
                 rinz.mudarCima();
             }
-            if (TestEvent(Keys["rinz-Baixo"], Event))
-            {
+            if (TestEvent(Keys["rinz-Baixo"], Event)){
                 rinz.mudarBaixo();
             }
         }
@@ -183,31 +184,6 @@ int Campo::Run(sf::RenderWindow &App){
         aux=cauda;
         aux1=cauda2;
         
-        // Dinâmica de inserir sprites p/ verificacao de colisoes
-        if(!i){ // guardar a primeira posicao
-            inicioTron = tron.getForma().getPosition();
-            inicioRinz = rinz.getForma().getPosition();
-        }else{
-            if(i == 500|| TestEvent(Keys["tron-Direita"], Event) 
-                       || TestEvent(Keys["tron-Esquerda"], Event) 
-                       || TestEvent(Keys["tron-Baixo"], Event)
-                       || TestEvent(Keys["tron-Cima"], Event)){ // 50 ou se a tron vira
-                SAux.setPosition(inicioTron -  tron.getForma().getPosition());
-                SAux.setColor(sf::Color(0,255,255));
-                std::cout<<"inseriu tron"<<std::endl;
-                FSpriteT.Insere(SAux, ok);
-            }
-            if(i == 500|| TestEvent(Keys["rinz-Direita"], Event) 
-                       || TestEvent(Keys["rinz-Esquerda"], Event) 
-                       || TestEvent(Keys["rinz-Baixo"], Event)
-                       || TestEvent(Keys["rinz-Cima"], Event)){ // 50 ou se a tron vira
-                SAux.setPosition(inicioRinz - rinz.getForma().getPosition());
-                SAux.setColor(sf::Color(255,60,0));
-                std::cout<<"inseriu rinzzler"<<std::endl;
-                FSpriteR.Insere(SAux, ok);
-                i = 0;
-            }
-        }
 
         s.setSize(sf::Vector2f(1,1));
         s1.setSize(sf::Vector2f(1,1));
@@ -312,3 +288,19 @@ void Campo::desenha(sf::RenderWindow & App) const{
     App.draw(horBaixo2, 2, sf::Lines);
     return;
 }
+
+void Campo::DinamicaSprite(Fila<sf::Sprite>& F,int& i, sf::Vector2f& posInicial, Moto& m){
+    // Dinâmica de inserir sprites p/ verificacao de colisoes
+    sf::Sprite SAux;
+    bool ok;
+    if(!i){ // guardar a primeira posicao
+        posInicial = m.getForma().getPosition();
+    }else{
+        if(i == 500){ // 50 ou se a tron vira
+            SAux.setPosition(inicioTron -  m.getForma().getPosition());
+            SAux.setColor(sf::Color(0,255,255));
+            std::cout<<"inseriu tron"<<std::endl;
+            F.Insere(SAux, ok);
+        }
+    }
+};
