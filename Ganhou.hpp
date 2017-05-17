@@ -50,7 +50,7 @@ Ganhou::Ganhou(float larg, float alt, sf::Color vcor): maxNumeroItens(2){
 			botao[i].setFillColor(cor);
 		else
 			botao[i].setFillColor(sf::Color::White);
-		
+
 		botao[i].setString(texto[i]);
 		botao[i].setPosition(sf::Vector2f(centrox - botao[i].getCharacterSize()*5, (altura-100)*2/3 + altura/(maxNumeroItens+1)/4*i-20));
 	}
