@@ -36,7 +36,7 @@ private:
     Fila<sf::Vertex> aux,aux1;
     sf::Vertex auxCauda;
     bool ok;
-    int i=0;
+    int iT=0, iR; // iterators
     int j=0;
     sf::RectangleShape s,s1;
 
@@ -44,7 +44,7 @@ private:
     Fila<sf::Sprite> FSpriteT, FSpriteR;
     sf::Vector2f inicioTron, inicioRinz;
 
-    void DinamicaSprite(Fila<sf::Sprite>&,int&, sf::Vector2f&, Moto&);
+    void DinamicaSprite(Fila<sf::Sprite>&,int&, sf::Vector2f&, Moto&, sf::RenderWindow &);
 public:
     Campo(void);
     virtual int Run(sf::RenderWindow &App);
@@ -117,6 +117,7 @@ int Campo::Run(sf::RenderWindow &App){
                 //evento para fechar
                 case sf::Event::Closed:
                     App.close();
+                    return (-1);
                     break;
                 //evento quando aumentar/diminuir, necessario ?    
                 case sf::Event::Resized:
@@ -131,33 +132,37 @@ int Campo::Run(sf::RenderWindow &App){
             }
             // teclas tron
             if (TestEvent(Keys["tron-Direita"], Event)){
-//                DinamicaSprite(FSpriteT, FSpriteR, i, inicioTron, inicioRinz);
+                iT = 500;
                 tron.mudarDireita();
             }
             if (TestEvent(Keys["tron-Esquerda"], Event)){
-//                DinamicaSprite(FSpriteT, FSpriteR, i, inicioTron, inicioRinz);
+                iT = 500;
                 tron.mudarEsquerda(); 
             }
             if (TestEvent(Keys["tron-Cima"], Event)){
-//                DinamicaSprite(FSpriteT, FSpriteR, i, inicioTron, inicioRinz);
+                iT = 500;
                 tron.mudarCima();
             }
             if (TestEvent(Keys["tron-Baixo"], Event)){
-//                DinamicaSprite(FSpriteT, FSpriteR, i, inicioTron, inicioRinz);
+                iT = 500;
                 tron.mudarBaixo();
             }
 
             // teclas rinzzler
             if (TestEvent(Keys["rinz-Direita"], Event)){
+                iR = 500;
                 rinz.mudarDireita();
             }
             if (TestEvent(Keys["rinz-Esquerda"], Event)){
-               rinz.mudarEsquerda(); 
+                iR = 500;
+                rinz.mudarEsquerda(); 
             }
             if (TestEvent(Keys["rinz-Cima"], Event)){
+                iR = 500;
                 rinz.mudarCima();
             }
             if (TestEvent(Keys["rinz-Baixo"], Event)){
+                iR = 500;
                 rinz.mudarBaixo();
             }
         }
@@ -176,7 +181,13 @@ int Campo::Run(sf::RenderWindow &App){
         auxCauda.color = sf::Color(255,60,0);
         cauda2.Insere(auxCauda,ok);
             
-        
+        if(!iT)
+            inicioTron = tron.getForma().getPosition();
+        if(!iR)
+            inicioRinz = rinz.getForma().getPosition();
+
+        DinamicaSprite(FSpriteT, iT, inicioTron, tron, App);
+        DinamicaSprite(FSpriteR, iR, inicioRinz, rinz, App);
         
         //desenha na tela o ratro e a tron
         desenha(App);
@@ -204,7 +215,7 @@ int Campo::Run(sf::RenderWindow &App){
                  break;
             }   
         }
-        
+      
       
         
         App.draw(cauda2.getDesenhoRastro(),cauda2.getNElementos(),sf::Points);
@@ -215,7 +226,8 @@ int Campo::Run(sf::RenderWindow &App){
         App.display();
         //limpa a tela 
         App.clear();
-        i++;
+        iT++;
+        iR++;
     }
     //Never reaching this point normally, but just in case, exit the application
     return -1;
@@ -289,18 +301,33 @@ void Campo::desenha(sf::RenderWindow & App) const{
     return;
 }
 
-void Campo::DinamicaSprite(Fila<sf::Sprite>& F,int& i, sf::Vector2f& posInicial, Moto& m){
+void Campo::DinamicaSprite(Fila<sf::Sprite>& F,int& i, sf::Vector2f& posInicial, Moto& m, sf::RenderWindow & app){
     // Dinâmica de inserir sprites p/ verificacao de colisoes
+    sf::Texture TAux;
     sf::Sprite SAux;
+
+
     bool ok;
-    if(!i){ // guardar a primeira posicao
-        posInicial = m.getForma().getPosition();
-    }else{
-        if(i == 500){ // 50 ou se a tron vira
-            SAux.setPosition(inicioTron -  m.getForma().getPosition());
-            SAux.setColor(sf::Color(0,255,255));
-            std::cout<<"inseriu tron"<<std::endl;
-            F.Insere(SAux, ok);
+    if(i == 500){ // 500 ou se a moto vira
+        SAux.setPosition(posInicial);
+        if(m.getForma().getPosition().y == posInicial.y){ // moveu na vertical
+            std::cout<<"TADAIMA"<<std::endl;
+            TAux.loadFromFile("Verde/baixo.png");
+            SAux.setTexture(TAux); // 17 larg x 35 alt
+            SAux.setScale(float(abs(m.getForma().getPosition().y - posInicial.y)),35.0f);
         }
+        if(m.getForma().getPosition().x == posInicial.x){ // moveu na horizontal
+            std::cout<<"OPA"<<std::endl;
+            TAux.loadFromFile("Verde/direita.png");
+            SAux.setTexture(TAux); // 17 larg x 35 alt
+            SAux.setScale(17.0f, float(abs(m.getForma().getPosition().x - posInicial.x)));
+        }
+        SAux.setColor(sf::Color(0,255,255));
+        
+        F.Insere(SAux, ok);
+        while( true ){
+                    app.draw(SAux);
+                }
+        i = 0;
     }
 };

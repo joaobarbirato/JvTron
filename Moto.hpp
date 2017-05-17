@@ -122,13 +122,13 @@ void Moto::mudarEsquerda(){
 };
 void Moto::mover(){
     if(posicao == 0)
-            forma.move(0.5f,0.0f);
+        forma.move(0.5f,0.0f);
     if(posicao == 1)
-            forma.move(0.0f,-0.5f); 
+        forma.move(0.0f,-0.5f); 
     if(posicao == 2)
-            forma.move(-0.5f,0.0f);
+        forma.move(-0.5f,0.0f);
     if(posicao == 3){
-            forma.move(0.0f,0.5f);
+        forma.move(0.0f,0.5f);
     }
 };
 int Moto::getAuxX(){
