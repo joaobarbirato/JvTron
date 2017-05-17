@@ -35,6 +35,7 @@ private:
     Fila<sf::Vertex> cauda2;
     Fila<sf::Vertex> aux,aux1;
     sf::Vertex auxCauda;
+    sf::RectangleShape retanguloBordas;
     bool ok;
     int iT=0, iR; // iterators
     int j=0;
@@ -65,6 +66,12 @@ int Campo::Run(sf::RenderWindow &App){
     this->tron.setPosicaoInicial(0,sf::Vector2f(60,60));
     this->rinz.setPosicaoInicial(2,sf::Vector2f(680,490));
     printf("%i %i",this->tron.getForma().getPosition().x,this->tron.getForma().getPosition().y);
+
+    retanguloBordas.setPosition(sf::Vector2f(50, 50));
+    retanguloBordas.setFillColor(sf::Color::Black);
+    retanguloBordas.setOutlineThickness(1);
+    retanguloBordas.setOutlineColor(sf::Color(0,255,255));
+    retanguloBordas.setSize(sf::Vector2f(App.getSize().x-100, App.getSize().y*4/5 -100));
     
     std::map<std::string,MyKeys> Keys;
     MyKeys key;
@@ -235,69 +242,28 @@ int Campo::Run(sf::RenderWindow &App){
 
 void Campo::desenha(sf::RenderWindow & App) const{
     const float tamanhoFonte = 20;
-    float largura = App.getSize().x;
-    float altura = App.getSize().y;
+
     sf::Text titulo;
     sf::Font fonte;
-    
+    sf::RectangleShape retanguloTrasExibicao;
+    retanguloTrasExibicao.setPosition(sf::Vector2f(40, 40));
+    retanguloTrasExibicao.setFillColor(sf::Color::Black);
+    retanguloTrasExibicao.setOutlineThickness(1);
+    retanguloTrasExibicao.setOutlineColor(sf::Color(0,255,255));
+    retanguloTrasExibicao.setSize(sf::Vector2f(App.getSize().x-80, App.getSize().y*4/5 -80));
+
     if(!fonte.loadFromFile("Tr2n.ttf")){}
 
     titulo.setFont(fonte);
     titulo.setString("JvTron");
     titulo.setCharacterSize(tamanhoFonte);
-    titulo.setPosition(sf::Vector2f(largura/2 - tamanhoFonte*3, 10));
+    titulo.setPosition(sf::Vector2f(App.getSize().x/2 - tamanhoFonte*3, 10));
     titulo.setFillColor(sf::Color(0,255,255));
-
-    // barras de campo da esquerda
-    sf::Vertex vertEsq1[] =  {
-        sf::Vertex(sf::Vector2f(50, 50), sf::Color(0,255,255)),
-        sf::Vertex(sf::Vector2f(50, altura*4/5 - 50), sf::Color(0,255,255))
-    };
-    sf::Vertex vertEsq2[] =  {
-        sf::Vertex(sf::Vector2f(40, 40), sf::Color(0,255,255)),
-        sf::Vertex(sf::Vector2f(40, altura*4/5 - 40), sf::Color(0,255,255))
-    };
-
-    // barras de campo da direita
-    sf::Vertex vertDir1[] =  {
-        sf::Vertex(sf::Vector2f(largura - 50, 50), sf::Color(0,255,255)),
-        sf::Vertex(sf::Vector2f(largura - 50, altura*4/5 - 50), sf::Color(0,255,255))
-    };
-    sf::Vertex vertDir2[] =  {
-        sf::Vertex(sf::Vector2f(largura - 40, 40), sf::Color(0,255,255)),
-        sf::Vertex(sf::Vector2f(largura - 40, altura*4/5 - 40), sf::Color(0,255,255))
-    };
-
-    // barras de campo de cima
-    sf::Vertex horCima1[] =  {
-        sf::Vertex(sf::Vector2f(50, 50), sf::Color(0,255,255)),
-        sf::Vertex(sf::Vector2f(largura - 50, 50), sf::Color(0,255,255))
-    };
-    sf::Vertex horCima2[] =  {
-        sf::Vertex(sf::Vector2f(40, 40), sf::Color(0,255,255)),
-        sf::Vertex(sf::Vector2f(largura - 40, 40), sf::Color(0,255,255))
-    };
-
-    // barras de campo de baixo
-    sf::Vertex horBaixo1[] = {
-        sf::Vertex(sf::Vector2f(50, altura*4/5 - 50), sf::Color(0,255,255)),
-        sf::Vertex(sf::Vector2f(largura - 50, altura*4/5 - 50), sf::Color(0,255,255))
-    };
-    sf::Vertex horBaixo2[] = {
-        sf::Vertex(sf::Vector2f(40, altura*4/5- 40), sf::Color(0,255,255)),
-        sf::Vertex(sf::Vector2f(largura - 40, altura*4/5 - 40), sf::Color(0,255,255))
-    };
 
     //desenha na tela o ratro e a tron
     App.draw(titulo);
-    App.draw(vertEsq1, 2, sf::Lines);
-    App.draw(vertEsq2, 2, sf::Lines);
-    App.draw(vertDir1, 2, sf::Lines);
-    App.draw(vertDir2, 2, sf::Lines);
-    App.draw(horCima1, 2, sf::Lines);
-    App.draw(horCima2, 2, sf::Lines);
-    App.draw(horBaixo1, 2, sf::Lines);
-    App.draw(horBaixo2, 2, sf::Lines);
+    App.draw(retanguloTrasExibicao);
+    App.draw(retanguloBordas);
     return;
 }
 
