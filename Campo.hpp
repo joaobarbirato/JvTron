@@ -41,10 +41,10 @@ private:
     sf::RectangleShape s,s1;
 
     Disco d;
-    Fila<sf::Sprite> FSpriteT, FSpriteR;
+    Fila<sf::RectangleShape> FRecT, FRecR;
     sf::Vector2f inicioTron, inicioRinz;
 
-    void DinamicaSprite(Fila<sf::Sprite>&,int&, sf::Vector2f&, Moto&, sf::RenderWindow &);
+    void DinamicaSprite(Fila<sf::RectangleShape>&,int&, sf::Vector2f&, Moto&);
 public:
     Campo(void);
     virtual int Run(sf::RenderWindow &App);
@@ -186,8 +186,8 @@ int Campo::Run(sf::RenderWindow &App){
         if(!iR)
             inicioRinz = rinz.getForma().getPosition();
 
-        DinamicaSprite(FSpriteT, iT, inicioTron, tron, App);
-        DinamicaSprite(FSpriteR, iR, inicioRinz, rinz, App);
+        DinamicaSprite(FRecT, iT, inicioTron, tron);
+        DinamicaSprite(FRecR, iR, inicioRinz, rinz);
         
         //desenha na tela o ratro e a tron
         desenha(App);
@@ -301,28 +301,16 @@ void Campo::desenha(sf::RenderWindow & App) const{
     return;
 }
 
-void Campo::DinamicaSprite(Fila<sf::Sprite>& F,int& i, sf::Vector2f& posInicial, Moto& m, sf::RenderWindow & app){
+void Campo::DinamicaSprite(Fila<sf::RectangleShape>& F,int& i, sf::Vector2f& posInicial, Moto& m){
     // Dinâmica de inserir sprites p/ verificacao de colisoes
-    sf::Texture TAux;
-    sf::Sprite SAux;
-
-
-    bool ok;
-    if(i == 500){ // 500 ou se a moto vira
-        SAux.setPosition(posInicial);
-        if(m.getForma().getPosition().y == posInicial.y){ // moveu na horizontal
-            std::cout<<"TADAIMA"<<std::endl;
-            TAux.loadFromFile("Verde/baixo.png");
-            SAux.setTexture(TAux); // 17 larg x 35 alt
-            SAux.setScale(float(abs(m.getForma().getPosition().y - posInicial.y)),35.0f);
-        }
-        if(m.getForma().getPosition().x == posInicial.x){ // moveu na vertical
-            std::cout<<"OPA"<<std::endl;
-            TAux.loadFromFile("Verde/direita.png");
-            SAux.setTexture(TAux); // 17 larg x 35 alt
-            SAux.setScale(17.0f, float(abs(m.getForma().getPosition().x - posInicial.x)));
-        }
-        SAux.setColor(sf::Color(0,255,255));
+    if(i==500){
+        sf::RectangleShape linha;
+        linha.setPosition(posInicial);
+        linha.setFillColor(sf::Color(0,255,255));
+        if(m.getForma().getPosition().y == posInicial.y) // moveu na horizontal
+            linha.setSize(sf::Vector2f(float(abs(m.getForma().getPosition().y - posInicial.y)),1.0f));
+        if(m.getForma().getPosition().x == posInicial.x) // moveu na vertical
+            linha.setSize(sf::Vector2f(1.0f, float(abs(m.getForma().getPosition().x - posInicial.x))));
         i = 0;
     }
 };

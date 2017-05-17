@@ -49,9 +49,9 @@ int main (){
     som2.setLoop(true);
 
     //inicializa as musicas
-    music.play();
-    som1.play();
-    som2.play();
+ //   music.play();
+ //   som1.play();
+ //   som2.play();
 
     //Screens preparations
     Menu * s0 = new Menu(App.getSize().x, App.getSize().y);
