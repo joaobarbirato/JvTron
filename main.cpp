@@ -25,7 +25,7 @@ int main (){
     sf::Music som2;
 
     //verificações. Se der erro na abertura de uma musica, o programa retorna 1
-    if(!music.openFromFile("derezzed.ogg")){
+    if(!music.openFromFile("tron.ogg")){
         cout << "ERROR 1" << endl;
         return 1;
     }
@@ -49,9 +49,9 @@ int main (){
     som2.setLoop(true);
 
     //inicializa as musicas
- //   music.play();
- //   som1.play();
- //   som2.play();
+//    music.play();
+//    som1.play();
+//    som2.play();
 
     //Screens preparations
     Menu * s0 = new Menu(App.getSize().x, App.getSize().y);
