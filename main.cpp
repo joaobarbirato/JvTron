@@ -25,7 +25,7 @@ int main (){
     sf::Music som2;
 
     //verificações. Se der erro na abertura de uma musica, o programa retorna 1
-    if(!music.openFromFile("tron.ogg")){
+    if(!music.openFromFile("derezzed.ogg")){
         cout << "ERROR 1" << endl;
         return 1;
     }
