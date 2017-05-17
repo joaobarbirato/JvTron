@@ -1,10 +1,13 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include "screens.hpp"
 /*
 g++ -c main.cpp && g++ main.o screens.hpp Moto.cpp Fila.cpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
 
 */
+
+using namespace std;
 
 int main (){
     //Applications variables
@@ -16,6 +19,40 @@ int main (){
 
     //Mouse cursor no more visible
     App.setMouseCursorVisible(false);
+
+    //declaração dos objetos sonoros
+    sf::Music music;
+    sf::Music som1;
+    sf::Music som2;
+
+    //verificações. Se der erro na abertura de uma musica, o programa retorna 1
+    if(!music.openFromFile("tron.ogg")){
+        cout << "ERROR 1" << endl;
+        return 1;
+    }
+
+    if(!som1.openFromFile("som-moto1.ogg")){
+        cout << "ERROR 2" << endl;
+        return 1;
+    }
+
+    if(!som2.openFromFile("som-moto2.ogg")){
+        cout << "ERROR 2" << endl;
+        return 1;
+    }
+
+    //altera o volume do som1 para 40 e som2 para 60, o maximo é 100
+    som1.setVolume(40);
+    som2.setVolume(60);
+
+    //music e som2 entram num loop para que as musicas reiniciem quando elas acabarem
+    music.setLoop(true);
+    som2.setLoop(true);
+
+    //inicializa as musicas
+    music.play();
+    som1.play();
+    som2.play();
 
     //Screens preparations
     Menu * s0 = new Menu(App.getSize().x, App.getSize().y);
