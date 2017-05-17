@@ -124,11 +124,7 @@ void Moto::mover(){
     if(posicao == 0)
         forma.move(0.5f,0.0f);
     if(posicao == 1)
-<<<<<<< HEAD
         forma.move(0.0f,-0.5f); 
-=======
-            forma.move(0.0f,-0.5f);
->>>>>>> 59226df4aa3fe243003d299c2985bff605d0a82b
     if(posicao == 2)
         forma.move(-0.5f,0.0f);
     if(posicao == 3){

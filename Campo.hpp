@@ -310,24 +310,19 @@ void Campo::DinamicaSprite(Fila<sf::Sprite>& F,int& i, sf::Vector2f& posInicial,
     bool ok;
     if(i == 500){ // 500 ou se a moto vira
         SAux.setPosition(posInicial);
-        if(m.getForma().getPosition().y == posInicial.y){ // moveu na vertical
+        if(m.getForma().getPosition().y == posInicial.y){ // moveu na horizontal
             std::cout<<"TADAIMA"<<std::endl;
             TAux.loadFromFile("Verde/baixo.png");
             SAux.setTexture(TAux); // 17 larg x 35 alt
             SAux.setScale(float(abs(m.getForma().getPosition().y - posInicial.y)),35.0f);
         }
-        if(m.getForma().getPosition().x == posInicial.x){ // moveu na horizontal
+        if(m.getForma().getPosition().x == posInicial.x){ // moveu na vertical
             std::cout<<"OPA"<<std::endl;
             TAux.loadFromFile("Verde/direita.png");
             SAux.setTexture(TAux); // 17 larg x 35 alt
             SAux.setScale(17.0f, float(abs(m.getForma().getPosition().x - posInicial.x)));
         }
         SAux.setColor(sf::Color(0,255,255));
-        
-        F.Insere(SAux, ok);
-        while( true ){
-                    app.draw(SAux);
-                }
         i = 0;
     }
 };
