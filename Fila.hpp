@@ -13,7 +13,7 @@ private: //atributos privados
 	int ultimo;
 	int nElementos;
     Gen elementos[20000];
-public: //atributos publicos
+public: // atributos publicos
 	Fila();
 	~Fila();
 	void Insere( Gen &, bool &);

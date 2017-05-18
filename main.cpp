@@ -2,25 +2,25 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "screens.hpp"
+
 /*
 g++ -c main.cpp && g++ main.o screens.hpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 */
-using namespace std;
 
+// main()
+// Função principal e gerenciadora de telas.
 int main (){
     std::vector<Tela*> Screens; // vetor que conterá as telas
     int screen = 0; // tela de inicio da aplicacao (0) é o menu
 
     // Janela do aplicativo creation
-    sf::RenderWindow App(sf::VideoMode(800, 800, 32), "SFML Demo 3");
+    sf::RenderWindow App(sf::VideoMode(800, 600, 32), "JvTron", sf::Style::Titlebar | sf::Style::Close);
 
-    //Mouse cursor no more visible
+    // Esconder seta do mouse
     App.setMouseCursorVisible(false);
 
     //declaração dos objetos sonoros
     sf::Music music;
-    sf::Music som1;
-    sf::Music som2;
 
     // Preparacao das tela
     Menu * s0 = new Menu(App.getSize().x, App.getSize().y); // TELA 0: menu do jogo
@@ -40,33 +40,17 @@ int main (){
         return 1;
     }
 
-    if(!som1.openFromFile("som-moto1.ogg")){
-        std::cout << "ERROR 2" << std::endl;
-        return 1;
-    }
-
-    if(!som2.openFromFile("som-moto2.ogg")){
-        std::cout << "ERROR 3" << std::endl;
-        return 1;
-    }
-
-    //altera o volume do som1 para 40 e som2 para 60, o maximo é 100
-    som1.setVolume(40);
-    som2.setVolume(60);
-
-    //music e som2 entram num loop para que as musicas reiniciem quando elas acabarem
+    //music e entra num loop para que a musica reinicie quando ela acabar
     music.setLoop(true);
-    som2.setLoop(true);
 
-    //inicializa as musicas
+    //inicializa a musica
     music.play();
-    som1.play();
-    som2.play();
 
-    // Main loop
+    // loop principal
     while (screen >= 0){
         screen = Screens[screen]->Run(App); // chamada do metodo que faz funcionar a tela atual
-    }
+    } // fim loop principal
 
     return EXIT_SUCCESS; // fim do programa
 }
+// fim main
