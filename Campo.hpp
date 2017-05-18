@@ -58,9 +58,8 @@ public:
 
 Campo::Campo(void){
     
-    inicioTron = sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
-    inicioRinz = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY());
-             
+    tron.getForma().getPosition() + tron.getFimCauda();
+    inicioRinz = rinz.getForma().getPosition() + rinz.getFimCauda();
        
 };
 
@@ -77,10 +76,10 @@ int Campo::Run(sf::RenderWindow &App){
     rinz.mudarEsquerda();
     this->tron.setPosicaoInicial(0,sf::Vector2f(60,60));
     this->rinz.setPosicaoInicial(2,sf::Vector2f(App.getSize().x-100, App.getSize().y*4/5 -80));
-    aux1= sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX() - 50.0f,rinz.getForma().getPosition().y + rinz.getAuxY());
-    aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX() + 50.0f,tron.getForma().getPosition().y + tron.getAuxY());
-    inicioTron = sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
-    inicioRinz = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY());
+    aux1= rinz.getForma().getPosition() + rinz.getFimCauda() + sf::Vector2f(-50.0f,0.0f);// sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX() - 50.0f,rinz.getForma().getPosition().y + rinz.getAuxY());
+    aux= tron.getForma().getPosition() + tron.getFimCauda() + sf::Vector2f(50.0f,0); //::Vector2f(tron.getForma().getPosition().x + tron.getAuxX() + 50.0f,tron.getForma().getPosition().y + tron.getAuxY());
+    inicioTron = tron.getForma().getPosition() + tron.getFimCauda();
+    inicioRinz = rinz.getForma().getPosition() + rinz.getFimCauda();
     printf("%i %i",this->tron.getForma().getPosition().x,this->tron.getForma().getPosition().y);
 
     retanguloBordas.setPosition(sf::Vector2f(50, 50));
@@ -156,25 +155,29 @@ int Campo::Run(sf::RenderWindow &App){
             // teclas tron
             if (TestEvent(Keys["tron-Direita"], Event)){
                 iT = 50;
-                 aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+//                 aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+                aux = tron.getForma().getPosition() + tron.getFimCauda();
                 tron.mudarDireita();
                  virou=true; 
             }
             if (TestEvent(Keys["tron-Esquerda"], Event)){
                 iT = 50;
-                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+//                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+                aux = tron.getForma().getPosition() + tron.getFimCauda();
                 tron.mudarEsquerda(); 
                  virou=true; 
             }
             if (TestEvent(Keys["tron-Cima"], Event)){
                 iT = 50;
-                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+//                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+                aux = tron.getForma().getPosition() + tron.getFimCauda();
                 tron.mudarCima();
                  virou=true; 
             }
             if (TestEvent(Keys["tron-Baixo"], Event)){
                 iT = 50;
-                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+//                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+                aux = tron.getForma().getPosition() + tron.getFimCauda();
                 tron.mudarBaixo();
                  virou=true; 
             }
@@ -183,25 +186,29 @@ int Campo::Run(sf::RenderWindow &App){
             if (TestEvent(Keys["rinz-Direita"], Event)){
                 iR = 50;
                 virou=true; 
-                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
+//                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
+                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
                 rinz.mudarDireita();
             }
             if (TestEvent(Keys["rinz-Esquerda"], Event)){
                 iR = 50;
                 virou=true;
-                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
+//                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
+                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
                 rinz.mudarEsquerda(); 
             }
             if (TestEvent(Keys["rinz-Cima"], Event)){
                 iR = 50;
                 virou=true;
-                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
+//                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
+                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
                 rinz.mudarCima();
             }
             if (TestEvent(Keys["rinz-Baixo"], Event)){
                 iR = 50;    
                 virou=true;
-                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
+//                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
+                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
                 rinz.mudarBaixo();
             }
         }
@@ -217,7 +224,8 @@ int Campo::Run(sf::RenderWindow &App){
 
         if(iT==50){
             if(!virou)
-                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
+            //aux = sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
             DinamicaSprite(caudaT, inicioTron,aux );
             iT=0;
             inicioTron=aux;
@@ -225,8 +233,8 @@ int Campo::Run(sf::RenderWindow &App){
         }
          if(iR==50){
             if(!virou2)
-                aux1= sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY());
-            
+                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
+            //aux1= sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY());
             DinamicaSprite(caudaR, inicioRinz,aux1 );
             iR=0;
             inicioRinz=aux1;
