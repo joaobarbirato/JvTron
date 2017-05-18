@@ -1,3 +1,17 @@
+/*
+    JvTron: Trabalho 1
+    Departamento de Computação
+    UFSCar Universidade Federal de São Carlos
+    Disciplina: Estrutura de Dados
+    Professor: Roberto Ferrari
+    Aluno(a):                               RA:
+        João Gabriel Melo Barbirato         726546
+        Leonardo de Oliveira Peralta        726556
+        Gabrieli Santos                     726523
+
+    Controle de Versão: https://github.com/joaobarbirato/JvTron
+*/
+
 #include <iostream>
 #include <fstream>
 #include "Tela.hpp"
@@ -5,6 +19,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
+// Mapeamento das teclas pressionadas
 enum InputType{
     KeyboardInput
 };
@@ -16,88 +31,103 @@ struct MyKeys{
 };
 
 bool TestEvent(MyKeys k, sf::Event e){
-    // Keyboard event
+    // Evento do teclado
     if (k.myInputType == KeyboardInput &&
         k.myEventType == e.type &&
-        k.myKeyCode == e.key.code)
-    {
+        k.myKeyCode == e.key.code){
         return (true);
     }
     return (false);
 };
 
+// Estrutura do Campo
 class Campo : public Tela{
 private:
-    Moto tron; //(sf::Color(0,255,255));
-    Moto rinz; //(sf::Color(255,60,0));
-    Fila<sf::Vertex> cauda;
-    Fila<sf::Vertex> cauda2;
-    Fila<sf::RectangleShape> caudaT,caudaR;
-    Fila<sf::RectangleShape> auxC;
-    sf::Vector2f aux,aux1;
-    sf::Vertex auxCauda;
-    bool virou =false;
-    bool virou2 =false;
-    sf::RectangleShape retanguloBordas;
-    bool ok;
-    int iT=0, iR=0; // iterators
-    int j=0;
-    sf::RectangleShape s,s1;
+    // atributos privados
+    Moto tron; // I fight for the users! (moto azul)
+    Moto rinz; // Defend the perfect system! (moto laranja)
+    Fila<sf::Vertex> FETron; // Fila de Exibição da cauda da moto azul
+    Fila<sf::Vertex> FERinz; // Fila de Exibição da cauda da moto laranja
+    Fila<sf::RectangleShape> paredesTron, paredesRinz; // Filas de armazenamento das paredes da moto azul
+    Fila<sf::RectangleShape> auxMudaOriTC; // Filas de armazenamento das paredes da moto laranja
+    sf::Vector2f auxMudaOriT, auxMudaOriR; // Auxiliares no armazenamento da posiçao quando há mudança de orientação
 
-    Fila<sf::RectangleShape> FRecT, FRecR;
-    sf::Vector2f inicioTron, inicioRinz;
+    sf::Vertex tempCauda; // cauda temporária para inserir nas filas de exibição
+    sf::RectangleShape tempRetangulo; // retangulo temporario para verificação de elementos nas filas de armazenamento
 
-    void DinamicaSprite(Fila<sf::RectangleShape>&, sf::Vector2f&, sf::Vector2f&);
-    void imprimeShapes(sf::RenderWindow &);
+    bool virouTron = false; // indica se a moto azul virou
+    bool virouRinz = false; // indica se a moto laranja virou
+    bool ok; // variavel para os métodos da fila
+    int iT=0, iR=0; // iteradores da moto azul e laranja, para auxílio do armazenamento das paredes na fila
+    int j=0; // contador/iterador para o loop de vericação de colisão
+
+    sf::Vector2f inicioTron, inicioRinz; // posição de inicio de cada Insere nas fila de armazenamentos das paredes
+
+    // métodos privados
+    void InsereParede(Fila<sf::RectangleShape>&, sf::Vector2f&, sf::Vector2f&);
     float meuAbs(const float&);
-public:
-    Campo(void);
-    virtual int Run(sf::RenderWindow &App);
     void desenha(sf::RenderWindow &) const;
+public: // métodos públicos
+    Campo();
+    ~Campo();
+    virtual int Run(sf::RenderWindow &App);
 };
 
-Campo::Campo(void){
-    
-    tron.setCor("Verde");
+// Implementação dos métodos do Campo
+
+// Construtor
+// Configura alguns atributos da classe
+Campo::Campo(){
+    tron.setCor("Azul");
     rinz.setCor("Laranja");
-    cauda.Reset();
-    cauda2.Reset();
+
+    FETron.Reset();
+    FERinz.Reset();
+
     tron.mudarDireita();
     rinz.mudarEsquerda();
+
     this->tron.setPosicaoInicial(0,sf::Vector2f(70,80));
     this->rinz.setPosicaoInicial(2,sf::Vector2f(690, 500));
-    aux1= rinz.getForma().getPosition() + rinz.getFimCauda() + sf::Vector2f(-50.0f,0.0f);// sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX() - 50.0f,rinz.getForma().getPosition().y + rinz.getAuxY());
-    aux= tron.getForma().getPosition() + tron.getFimCauda() + sf::Vector2f(50.0f,0); //::Vector2f(tron.getForma().getPosition().x + tron.getAuxX() + 50.0f,tron.getForma().getPosition().y + tron.getAuxY());
+
+    auxMudaOriR= rinz.getForma().getPosition() + rinz.getFimCauda() + sf::Vector2f(-50.0f,0.0f);
+    auxMudaOriT= tron.getForma().getPosition() + tron.getFimCauda() + sf::Vector2f(50.0f,0);
+
     inicioTron = tron.getForma().getPosition() + tron.getFimCauda();
     inicioRinz = rinz.getForma().getPosition() + rinz.getFimCauda();
-    printf("%i %i",this->tron.getForma().getPosition().x,this->tron.getForma().getPosition().y);
-       
 };
+// fim Construtor
 
+// Destrutor
+Campo::~Campo(){};
+
+// Run
+// Recebe por referência a janela da biblioteca gráfica
 int Campo::Run(sf::RenderWindow &App){
+    // declaração de variáveis
     sf::Event Event;
-    sf::Sprite SAux;
-    bool indo,indo2= false;
-    bool Running = true;
-    sf::RectangleShape linha1,linha2,linha3,linha4;
-
-
-    retanguloBordas.setPosition(sf::Vector2f(50,65));
-    retanguloBordas.setFillColor(sf::Color::Black);
-    retanguloBordas.setOutlineThickness(1);
-    retanguloBordas.setOutlineColor(sf::Color(0,255,255));
-    retanguloBordas.setSize(sf::Vector2f(App.getSize().x-100, App.getSize().y - 130 ));
+    sf::Sprite SauxMudaOriT;
+    bool semChoqueT = false, semChoqueR = false; // recebe true se não há choque com as paredes
+    bool Running = true; // controle do loop do jogo
+    sf::RectangleShape linha1,linha2,linha3,linha4; // paredes invisíveis do campo
     
-    
+    //      cima
     linha1.setPosition(sf::Vector2f(50, 65));
     linha1.setSize(sf::Vector2f(App.getSize().x-100, 1.0f));
+
+    //      esquerda
     linha2.setPosition(sf::Vector2f(50, 65));
     linha2.setSize(sf::Vector2f(1.0f, App.getSize().y - 130));
+
+    //      baixo
     linha3.setPosition(sf::Vector2f(50 + App.getSize().x-100, 65));
     linha3.setSize(sf::Vector2f(1.0f , App.getSize().y - 130));
+
+    //      direita
     linha4.setPosition(sf::Vector2f(50, 65 + App.getSize().y - 130));
     linha4.setSize(sf::Vector2f(App.getSize().x-100, 1.0f));
     
+// inicialização do mapa de teclas
     std::map<std::string,MyKeys> Keys;
     MyKeys key;
 
@@ -140,236 +170,223 @@ int Campo::Run(sf::RenderWindow &App){
     key.myEventType = sf::Event::KeyPressed;
     key.myKeyCode = sf::Keyboard::I;
     Keys["rinz-Cima"] = key;  
-    
+// fim inicialização do mapa de teclas
 
-    while (Running){ // gameloop
-        while(App.pollEvent(Event)){ // eventloop
-            // pensar em eventos pra Ganhou e Perdeu
+    while (Running){ // loop da tela
+        while(App.pollEvent(Event)){ // loop de eventos
             switch(Event.type){
-                //evento para fechar
-                case sf::Event::Closed:
+                case sf::Event::Closed: // fechar a janela
                     App.close();
                     return (-1);
                     break;
-                //evento quando aumentar/diminuir, necessario ?    
-                case sf::Event::Resized:
-                    printf("Nova janela com width: %i e com height: %i \n",Event.size.width,Event.size.height);
-                    break;
-                //"aparece" o q a pessoa escreve
-                case sf::Event::TextEntered:
-                    if(Event.text.unicode < 128)
-                        printf("%c",Event.text.unicode);         
-                    break;
-               
             }
-            // teclas tron
+
+// Na implementação, a cauda exibida e a parede que ela expressa são elementos diferentes.
+// Quando os iteradores marcam 50, armazena-se uma parede na fila de paredes.
+
+            // Mudança de orientação da moto azul
             if (TestEvent(Keys["tron-Direita"], Event)){
                 iT = 50;
-//                 aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
-                aux = tron.getForma().getPosition() + tron.getFimCauda();
+                auxMudaOriT = tron.getForma().getPosition() + tron.getFimCauda();
                 tron.mudarDireita();
-                 virou=true; 
+                virouTron = true; 
             }
             if (TestEvent(Keys["tron-Esquerda"], Event)){
                 iT = 50;
-//                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
-                aux = tron.getForma().getPosition() + tron.getFimCauda();
+                auxMudaOriT = tron.getForma().getPosition() + tron.getFimCauda();
                 tron.mudarEsquerda(); 
-                 virou=true; 
+                virouTron = true; 
             }
             if (TestEvent(Keys["tron-Cima"], Event)){
                 iT = 50;
-//                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
-                aux = tron.getForma().getPosition() + tron.getFimCauda();
+                auxMudaOriT = tron.getForma().getPosition() + tron.getFimCauda();
                 tron.mudarCima();
-                 virou=true; 
+                virouTron = true; 
             }
             if (TestEvent(Keys["tron-Baixo"], Event)){
                 iT = 50;
-//                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
-                aux = tron.getForma().getPosition() + tron.getFimCauda();
+                auxMudaOriT = tron.getForma().getPosition() + tron.getFimCauda();
                 tron.mudarBaixo();
-                 virou=true; 
+                virouTron = true; 
             }
 
-            // teclas rinzzler
+            // Mudança de orientação da moto laranja
             if (TestEvent(Keys["rinz-Direita"], Event)){
                 iR = 50;
-                virou=true; 
-//                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
-                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
+//                virouTron=true; 
+                auxMudaOriR = rinz.getForma().getPosition() + rinz.getFimCauda();
                 rinz.mudarDireita();
+                virouRinz = true;
             }
             if (TestEvent(Keys["rinz-Esquerda"], Event)){
                 iR = 50;
-                virou=true;
-//                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
-                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
-                rinz.mudarEsquerda(); 
+                auxMudaOriR = rinz.getForma().getPosition() + rinz.getFimCauda();
+                rinz.mudarEsquerda();
+                virouRinz = true;
             }
             if (TestEvent(Keys["rinz-Cima"], Event)){
                 iR = 50;
-                virou=true;
-//                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
-                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
+//                virouTron=true;
+                auxMudaOriR = rinz.getForma().getPosition() + rinz.getFimCauda();
                 rinz.mudarCima();
+                virouRinz = true;
             }
             if (TestEvent(Keys["rinz-Baixo"], Event)){
                 iR = 50;    
-                virou=true;
-//                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
-                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
+                virouTron=true;
+//                auxMudaOriR = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getauxMudaOriTX(),rinz.getForma().getPosition().y + rinz.getauxMudaOriTY()); 
+                auxMudaOriR = rinz.getForma().getPosition() + rinz.getFimCauda();
                 rinz.mudarBaixo();
+                virouRinz = true;
             }
         }
         
-        
-     
-        auxCauda.position=tron.getForma().getPosition() + tron.getFimCauda();
-        auxCauda.color = sf::Color(0,255,255);
-        cauda.Insere(auxCauda,ok);
-        auxCauda.position=rinz.getForma().getPosition() + rinz.getFimCauda();
-        auxCauda.color = sf::Color(255,60,0);
-        cauda2.Insere(auxCauda,ok);
+        // Mudou de orientação ou não, insere-se na fila de exibição
+        //  Inserir na fila de exibição da moto azul
+        tempCauda.position = tron.getForma().getPosition() + tron.getFimCauda();
+        tempCauda.color = sf::Color(0,255,255);
+        FETron.Insere(tempCauda,ok);
 
-        if(iT==50){
-            if(!virou)
-                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
-            //aux = sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
-            DinamicaSprite(caudaT, inicioTron,aux );
-            iT=0;
-            inicioTron=aux;
-            virou=false;
+        //  Inserir na fila de exibição da moto laranja
+        tempCauda.position = rinz.getForma().getPosition() + rinz.getFimCauda();
+        tempCauda.color = sf::Color(255,60,0);
+        FERinz.Insere(tempCauda,ok);
+
+        // Quando os iteradoes vão a 50:
+        if(iT == 50){ // para a moto azul:
+            if(!virouTron)
+                auxMudaOriT = tron.getForma().getPosition() + tron.getFimCauda();
+        
+            InsereParede(paredesTron, inicioTron,auxMudaOriT ); // chamada para inserir uma parede na fila de paredes
+            iT = 0;
+            inicioTron=auxMudaOriT;
+            virouTron=false;
         }
-         if(iR==50){
-            if(!virou2)
-                aux1 = rinz.getForma().getPosition() + rinz.getFimCauda();
-            //aux1= sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY());
-            DinamicaSprite(caudaR, inicioRinz,aux1 );
-            iR=0;
-            inicioRinz=aux1;
+         if(iR == 50){ // para a moto laranja:
+            if(!virouRinz)
+                auxMudaOriR = rinz.getForma().getPosition() + rinz.getFimCauda(); // chamada para inserir uma parede na fila de paredes
+
+            InsereParede(paredesRinz, inicioRinz,auxMudaOriR );
+            iR = 0;
+            inicioRinz=auxMudaOriR;
          }
-                     
         
-        
-        //desenha na tela o ratro e a tron
-        desenha(App);
-//         ver funcionamento da cauda - a parte da info
-        
-        for(j=0;j < caudaT.getNElementos() - 2 ;j++  ){
-                caudaT.Retira(s,ok);
-                caudaT.Insere(s,ok);
-                if(tron.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) ){
-                    printf("Fudeu 1 \n");    
-                    return 3;
+// Verificações de choques nas filas de paredes (onde e por qual moto)
+        for(j = 0; j < paredesTron.getNElementos() - 2 ; j++){ // para paredes na moto azul
+                paredesTron.Retira(tempRetangulo, ok); 
+                paredesTron.Insere(tempRetangulo, ok);
+                if(tron.getForma().getGlobalBounds().intersects(tempRetangulo.getGlobalBounds())){ // se a azul bate
+                    return (3); // a laranja ganha (TELA 3: Ganhou em laranja)
                     break;
                 }
-                if(rinz.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) ){
-                 printf("Fudeu 2 \n");
-                 return 2;
-                 break;
+                if(rinz.getForma().getGlobalBounds().intersects(tempRetangulo.getGlobalBounds())){ // se a laranja bate
+                    return (2); // a azul ganha (TELA 2: Ganhou em azul)
+                    break;
                 } 
-                indo = true;
+                semChoqueT = true;
         }
-        if(caudaT.getNElementos() > 2 && indo == true){
-                caudaT.Retira(s,ok);
-                caudaT.Insere(s,ok);
-                caudaT.Retira(s,ok);
-                caudaT.Insere(s,ok);
+        if(paredesTron.getNElementos() > 2 && semChoqueT == true){
+                paredesTron.Retira(tempRetangulo, ok);
+                paredesTron.Insere(tempRetangulo, ok);
+                paredesTron.Retira(tempRetangulo, ok);
+                paredesTron.Insere(tempRetangulo, ok);
         }
-        for(j=0;j <=caudaR.getNElementos() ;j++  ){
-                caudaR.Retira(s,ok);
-                 caudaR.Insere(s,ok);
-                if(tron.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) ){
-                    printf("Fudeu 1 \n");    
-                    return 3;
+
+        for(j = 0; j <=paredesRinz.getNElementos() ; j++){ // para paredes na moto laranja
+                paredesRinz.Retira(tempRetangulo, ok);
+                paredesRinz.Insere(tempRetangulo, ok);
+                if(tron.getForma().getGlobalBounds().intersects(tempRetangulo.getGlobalBounds()) ){ // se a azul bate
+                    return (3); // a laranja ganha (TELA 3: Ganhou em laranja)
                     break;
                 }
-                if(rinz.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) ){
-                 printf("Fudeu 2 \n");
-                 return 2;
-                 break;
+                if(rinz.getForma().getGlobalBounds().intersects(tempRetangulo.getGlobalBounds()) ){
+                    return (2); // a laranja ganha (TELA 2: Ganhou em azul)
+                    break;
                 }
-                indo2=true;
+                semChoqueR = true;
         }
-         if(caudaR.getNElementos() > 2 && indo == true){
-                caudaR.Retira(s,ok);
-                caudaR.Insere(s,ok);
-                caudaR.Retira(s,ok);
-                caudaR.Insere(s,ok);
-        }    
-        if(tron.getForma().getGlobalBounds().intersects(linha1.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(linha2.getGlobalBounds())
-             || tron.getForma().getGlobalBounds().intersects(linha3.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(linha4.getGlobalBounds()) )
-        
-            return 3;
-        if(rinz.getForma().getGlobalBounds().intersects(linha1.getGlobalBounds()) || rinz.getForma().getGlobalBounds().intersects(linha2.getGlobalBounds())
-             || rinz.getForma().getGlobalBounds().intersects(linha3.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(linha4.getGlobalBounds()) )
-            return 2;
-//             if (j >=caudaT.getNElementos() || j >= caudaR.getNElementos() ){
-//                 break;
+        if(paredesRinz.getNElementos() > 2 && semChoqueT == true){
+                paredesRinz.Retira(tempRetangulo, ok);
+                paredesRinz.Insere(tempRetangulo, ok);
+                paredesRinz.Retira(tempRetangulo, ok);
+                paredesRinz.Insere(tempRetangulo, ok);
+        }
+
+        // Verificações de choque nas paredes do campo
+        if(     tron.getForma().getGlobalBounds().intersects(linha1.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(linha2.getGlobalBounds())
+             || tron.getForma().getGlobalBounds().intersects(linha3.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(linha4.getGlobalBounds()) ) // se a azul bate
+            return (3); // a laranja ganha (TELA 3: Ganhou em laranja)
+        if(     rinz.getForma().getGlobalBounds().intersects(linha1.getGlobalBounds()) || rinz.getForma().getGlobalBounds().intersects(linha2.getGlobalBounds())
+             || rinz.getForma().getGlobalBounds().intersects(linha3.getGlobalBounds()) || rinz.getForma().getGlobalBounds().intersects(linha4.getGlobalBounds()) ) // se a laranja bate
+            return (2); // a azul ganha (TELA 2: Ganhou em azul)
                 
-            
-            
-                
-        rinz.mover();
+        // mover motos
         tron.mover();
-      
-         iT=iT+1;
-        iR=iR+1;
-//        imprimeShapes(App);
-//         App.draw(cauda2.getDesenhoRastro(),cauda2.getNElementos(),sf::Points);
-//        d.aparece( float(rand() % (App.getSize().x-50) + 50), float(rand() % (App.getSize().y-50)-20) + 50 , App);
-        App.draw(cauda2.getDesenhoRastro(),cauda2.getNElementos(),sf::Points);
-        App.draw(cauda.getDesenhoRastro(),cauda.getNElementos(),sf::Points);
+        rinz.mover();
+        
+        // contar nos iteradores
+        iT++;
+        iR++;
+
+        // dese
+        desenha(App);
+        App.draw(FERinz.getDesenhoRastro(),FERinz.getNElementos(),sf::Points);
+        App.draw(FETron.getDesenhoRastro(),FETron.getNElementos(),sf::Points);
         App.draw(rinz.getForma());
         App.draw(tron.getForma());
-//         App.draw(s);
         App.display();
-        //limpa a tela 
-        App.clear();
-       
-    }
-    //Never reaching this point normally, but just in case, exit the application
-    return -1;
-}
+        App.clear();  
+    } // fim loop da tela
 
+    // não há como chegar até aqui mas, se acontecer, termine o programa.
+    return (-1);
+}
+// fim Run
+
+// Desenha
+// Método que desenha na tela alguns elementos
 void Campo::desenha(sf::RenderWindow & App) const{
     const float tamanhoFonte = 30;
-    int i;
-
     sf::Text titulo;
     sf::Font fonte;
-    sf::RectangleShape sombraTexto;
-    sf::RectangleShape retanguloTrasExibicao;
-    sf::RectangleShape linha;
+    sf::RectangleShape sombraTexto; // retangulo por tras dos títulos
+    sf::RectangleShape retanguloTras, retanguloFrente; // retangulos principais
+    sf::RectangleShape linha; // linha base para a grade
     
     linha.setPosition(sf::Vector2f(0, 0));
     linha.setFillColor(sf::Color(0,255,255));
     linha.setSize(sf::Vector2f(800.0f, 1.0f ));
-        
-    retanguloTrasExibicao.setPosition(sf::Vector2f(40, 55));
-    retanguloTrasExibicao.setFillColor(sf::Color::Black);
-    retanguloTrasExibicao.setOutlineThickness(1);
-    retanguloTrasExibicao.setOutlineColor(sf::Color(0,255,255));
-    retanguloTrasExibicao.setSize(sf::Vector2f(App.getSize().x-80, App.getSize().y - 110 ));
-
-    if(!fonte.loadFromFile("Tr2n.ttf")){}
-
-    for(i=0;i<21; i++){
-        linha.setPosition(sf::Vector2f(0, 30*i));
-        App.draw(linha);
-    }
     
-    linha.setSize(sf::Vector2f(1.0f, 600.0f ));
-    for(i=0;i<21; i++){
-        linha.setPosition(sf::Vector2f(40*i, 0));
-        App.draw(linha);
-    }
+    retanguloFrente.setPosition(sf::Vector2f(50,65));
+    retanguloFrente.setFillColor(sf::Color::Black);
+    retanguloFrente.setOutlineThickness(1);
+    retanguloFrente.setOutlineColor(sf::Color(0,255,255));
+    retanguloFrente.setSize(sf::Vector2f(App.getSize().x-100, App.getSize().y - 130 ));
+
+    retanguloTras.setPosition(sf::Vector2f(40, 55));
+    retanguloTras.setFillColor(sf::Color::Black);
+    retanguloTras.setOutlineThickness(1);
+    retanguloTras.setOutlineColor(sf::Color(0,255,255));
+    retanguloTras.setSize(sf::Vector2f(App.getSize().x-80, App.getSize().y - 110 ));
+
     sombraTexto.setPosition((sf::Vector2f(App.getSize().x/2 - tamanhoFonte*2 - 8, 14)));
     sombraTexto.setFillColor(sf::Color::Black);
     sombraTexto.setSize(sf::Vector2f(140,30));
     sombraTexto.setOutlineThickness(1);
     sombraTexto.setOutlineColor(sf::Color(0,255,255));
+
+    if(!fonte.loadFromFile("Tr2n.ttf")){} // fonte dos títulos
+
+    // Exibe grade
+    for(int i = 0; i < 21; i++){
+        linha.setPosition(sf::Vector2f(0, 30*i));
+        App.draw(linha);
+    }
+    linha.setSize(sf::Vector2f(1.0f, 600.0f ));
+    for(int i = 0; i < 21; i++){
+        linha.setPosition(sf::Vector2f(40*i, 0));
+        App.draw(linha);
+    }
     
     titulo.setFont(fonte);
     titulo.setString("JvTron");
@@ -377,24 +394,24 @@ void Campo::desenha(sf::RenderWindow & App) const{
     titulo.setPosition(sf::Vector2f(App.getSize().x/2 - tamanhoFonte*2 - 3, 10));
     titulo.setFillColor(sf::Color(0,255,255));
 
-    //desenha na tela o ratro e a tron
+    // desenha na janela
     App.draw(sombraTexto);
     App.draw(titulo);
     titulo.setPosition(sf::Vector2f(App.getSize().x/2 - tamanhoFonte*2 - 3, App.getSize().y - 50));
     sombraTexto.setPosition((sf::Vector2f(App.getSize().x/2 - tamanhoFonte*2 - 8, App.getSize().y - 46)));
     App.draw(sombraTexto);
     App.draw(titulo);
-    App.draw(retanguloTrasExibicao);
-    App.draw(retanguloBordas);
-    return;
-}
+    App.draw(retanguloTras);
+    App.draw(retanguloFrente);
+};
+// fim desenha
 
-void Campo::DinamicaSprite(Fila<sf::RectangleShape>& F, sf::Vector2f& posInicial, sf::Vector2f& posFinal){
-    // Dinâmica de inserir sprites p/ verificacao de colisoes
-        bool ok;
+// InsereParede
+// Inserção de paredes p/ verificacao de colisoes
+void Campo::InsereParede(Fila<sf::RectangleShape>& F, sf::Vector2f& posInicial, sf::Vector2f& posFinal){
+        bool ok; // auxiliar para métodos da fila
     
         sf::RectangleShape linha;
-        sf::Vertex f;
         linha.setPosition(posInicial);
         if(posFinal.y == posInicial.y){ // moveu na horizontal
             linha.setSize(sf::Vector2f(meuAbs(posFinal.x - posInicial.x), 1.0f));
@@ -406,27 +423,13 @@ void Campo::DinamicaSprite(Fila<sf::RectangleShape>& F, sf::Vector2f& posInicial
         F.Insere(linha,ok);
     
 };
+// fim InsereParede
 
+// meuAbs
+// Função auxiliar de módulo escalar para floats
 float Campo::meuAbs(const float& a){
     if(a < 0)
-        return -a;
-    return a;
-}
-
-void Campo::imprimeShapes(sf::RenderWindow & app){
-    sf::RectangleShape auxrs;
-    Fila<sf::RectangleShape> auxf;
-    bool auxb;
-    while(!caudaT.Vazia()){
-        caudaT.Retira(auxrs, auxb);
-        if(auxb){
-            auxf.Insere(auxrs,auxb);
-            app.draw(auxrs);
-        }
-    }
-    while(!auxf.Vazia()){
-        auxf.Retira(auxrs,auxb);
-        if(auxb)
-            caudaT.Insere(auxrs,auxb);
-    }
-};    
+        return (-a);
+    return (a);
+};
+// fim meuAbs

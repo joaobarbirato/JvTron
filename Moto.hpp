@@ -197,7 +197,7 @@ void Moto::setPosicaoInicial(int x, sf::Vector2f vetor){
 // Determina o nome da cor
 void Moto::setCor(std::string c){
     cor=c;
-    if(cor == "Verde")
+    if(cor == "Azul")
         RGB = sf::Color(0,255,255);
     if(cor == "Laranja")
         RGB = sf::Color(255,60,0);

@@ -131,8 +131,8 @@ int Regras::Run(sf::RenderWindow &App){
 	while (Running){ // loop da tela
 		// Verificação de eventos
 		while (App.pollEvent(Event)){ // loop de eventos
-			if (Event.type == sf::Event::Closed){
-				return (-1);
+			if (Event.type == sf::Event::Closed){ // se fechar a tela
+				return (-1); // fim jogo
 			}
 			// ao pressionar botões
 			if (Event.type == sf::Event::KeyPressed){
@@ -178,4 +178,4 @@ void Regras::desenha(sf::RenderWindow & App) const{
 		App.draw(infos[i]);
 	}
 };
-// fim Desenha
+// fim desenha

@@ -18,7 +18,7 @@
 #include "screens.hpp"
 
 /* isso é o comando no terminal linux pra compilar o programa
-g++ -c main.cpp && g++ main.o screens.hpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+g++ -c main.cpp && g++ main.o screens.hpp -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio && ./sfml-app
 */
 
 // main()
@@ -34,7 +34,7 @@ int main (){
     App.setMouseCursorVisible(false);
 
     //declaração dos objetos sonoros
-    sf::Music music;
+    sf::Music musica;
 
     // Preparacao das tela
     Menu * s0 = new Menu(App.getSize().x, App.getSize().y); // TELA 0: menu do jogo
@@ -49,22 +49,21 @@ int main (){
     Screens.push_back(s4);
 
     //verificações. Se der erro na abertura de uma musica, o programa retorna 1
-    if(!music.openFromFile("tron.ogg")){
+    if(!musica.openFromFile("tron.ogg")){
         std::cout << "ERROR 1" << std::endl;
         return 1;
     }
 
     //music e entra num loop para que a musica reinicie quando ela acabar
-    music.setLoop(true);
+    musica.setLoop(true);
 
     //inicializa a musica
-    music.play();
+    musica.play();
 
     // loop principal
     while (screen >= 0){
-        if( (screen = Screens[screen]->Run(App)) == 1)
+        if( (screen = Screens[screen]->Run(App)) == 1 )// chamada do metodo que faz funcionar a tela atual
             Screens[1] = new Campo();
-            // chamada do metodo que faz funcionar a tela atual
     } // fim loop principal
 
     return EXIT_SUCCESS; // fim do programa

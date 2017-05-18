@@ -20,8 +20,8 @@
 class Menu : public Tela{
 private:
 	// atributos privados
-	const int maxNumeroItens; // 
-	int numeroItem; // numero do item pressionado
+	const int maxNumeroItens; // número máximo de botões
+	int numeroItem; // número do item pressionado
 	float largura, altura, centrox, centroy; // medidas da tela
 	sf::Font fonte;
 	sf::Text titulo;
@@ -30,14 +30,15 @@ private:
 	// métodos privados
 	void MovaParaCima();
 	void MovaParaBaixo();
-	int ItemApertado();
-	sf::Vector2f getCentro() const;
 	void desenha(sf::RenderWindow &) const;
+	int ItemApertado();
 public: // métodos privados
 	Menu(float larg, float alt);
 	~Menu();
 	virtual int Run(sf::RenderWindow& App);
 };
+
+// Implementação dos métodos do menu
 
 // Construtor
 // Recebe como parâmetro a largura e altura (utiliza-se as medidas da janela principal da aplicação)
@@ -54,9 +55,7 @@ Menu::Menu(float larg, float alt): maxNumeroItens(3){
 
 	botao = new sf::Text[maxNumeroItens]; // alocação dinâmica do tamanho do vetor de botões
 
-	if (!fonte.loadFromFile("Tr2n.ttf")){ // carregar selecionada
-		std::cerr << "Error loading verdanab.ttf" << std::endl;
-	}
+	if (!fonte.loadFromFile("Tr2n.ttf")){}// carregar fonte selecionada	
 
 	// inicializando titulo
 	titulo.setCharacterSize(90);
@@ -76,12 +75,12 @@ Menu::Menu(float larg, float alt): maxNumeroItens(3){
 		botao[i].setString(texto[i]);
 		botao[i].setPosition(sf::Vector2f(centrox - botao[i].getCharacterSize()*1.95, (altura-100)*2/3 + altura/(maxNumeroItens+1)/2.5*i - 80));
 	}
-
 }
+// fim Construtor
 
 // Destrutor
 // Deleta vetor de botões
-Menu::~Menu(){ delete botao; };
+Menu::~Menu(){ delete botao; }; // fim Destrutor
 
 // Run
 // Recebe por referência a janela da biblioteca gráfica
