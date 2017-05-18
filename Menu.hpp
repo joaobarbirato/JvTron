@@ -1,39 +1,63 @@
+/*
+	JvTron: Trabalho 1
+	Departamento de Computação
+	UFSCar Universidade Federal de São Carlos
+	Disciplina: Estrutura de Dados
+	Professor: Roberto Ferrari
+	Aluno(a):								RA:
+		João Gabriel Melo Barbirato			726546
+		Leonardo de Oliveira Peralta		726556
+		Gabrieli Santos						726523
+    
+	Controle de Versão: https://github.com/joaobarbirato/JvTron
+*/
+
 #include <iostream>
+#include <SFML/Graphics.hpp>
 #include "Tela.hpp"
 
-#include <SFML/Graphics.hpp>
-
+// Estrutura do Menu
 class Menu : public Tela{
 private:
-	const int maxNumeroItens;
-	int numeroItem;
-	float largura, altura, centrox, centroy;
+	// atributos privados
+	const int maxNumeroItens; // 
+	int numeroItem; // numero do item pressionado
+	float largura, altura, centrox, centroy; // medidas da tela
 	sf::Font fonte;
-	sf::Text *botao;
 	sf::Text titulo;
-public:
-	Menu(float larg, float alt);
-	~Menu();
-	virtual int Run(sf::RenderWindow &App);
+	sf::Text *botao; // vetor de botões
+
+	// métodos privados
 	void MovaParaCima();
 	void MovaParaBaixo();
 	int ItemApertado();
 	sf::Vector2f getCentro() const;
 	void desenha(sf::RenderWindow &) const;
+public: // métodos privados
+	Menu(float larg, float alt);
+	~Menu();
+	virtual int Run(sf::RenderWindow& App);
 };
 
+// Construtor
+// Recebe como parâmetro a largura e altura (utiliza-se as medidas da janela principal da aplicação)
+// Configuração inicial de atributos
 Menu::Menu(float larg, float alt): maxNumeroItens(3){
-	std::string texto[maxNumeroItens] = {"Jogar", "Regras", "Sair"};
-	numeroItem = 0;
-	botao = new sf::Text[maxNumeroItens];
+	std::string texto[maxNumeroItens] = {"Jogar", "Regras", "Sair"}; // texto para os botões
+	numeroItem = 0; // seleciona-se o primeiro item
+
+	// configuração das medidas
 	largura = larg;
 	altura = alt;
 	centrox = largura/2;
 	centroy = altura/2;
 
-	if (!fonte.loadFromFile("Tr2n.ttf")){
+	botao = new sf::Text[maxNumeroItens]; // alocação dinâmica do tamanho do vetor de botões
+
+	if (!fonte.loadFromFile("Tr2n.ttf")){ // carregar selecionada
 		std::cerr << "Error loading verdanab.ttf" << std::endl;
 	}
+
 	// inicializando titulo
 	titulo.setCharacterSize(90);
 	titulo.setString("JvTron");
@@ -42,38 +66,39 @@ Menu::Menu(float larg, float alt): maxNumeroItens(3){
 	titulo.setFillColor(sf::Color(0,255,255));
 
 	//inicializando botoes
-	for(int i = 0; i < maxNumeroItens; i++){
+	for(int i = 0; i < maxNumeroItens; i++){ 
 		botao[i].setFont(fonte);
 		botao[i].setCharacterSize(40);
-
 		if(i == 0)
 			botao[i].setFillColor(sf::Color(0,255,255));
 		else
 			botao[i].setFillColor(sf::Color::White);
-
 		botao[i].setString(texto[i]);
 		botao[i].setPosition(sf::Vector2f(centrox - botao[i].getCharacterSize()*1.95, (altura-100)*2/3 + altura/(maxNumeroItens+1)/2.5*i - 80));
 	}
 
 }
 
+// Destrutor
+// Deleta vetor de botões
 Menu::~Menu(){ delete botao; };
 
+// Run
+// Recebe por referência a janela da biblioteca gráfica
 int Menu::Run(sf::RenderWindow &App){
 	// declaracao de variaveis
-	sf::Event Event;
+	sf::Event Event; // eventos de jogo
 	bool Running = true;
 	int alpha = 0;
-	while (Running){ // gameloop
-		//Verifying events
-		while (App.pollEvent(Event)){ // eventloop
-			// App closed
+	while (Running){ // loop da tela
+		// Verificação de eventos
+		while (App.pollEvent(Event)){ // loop de eventos
 			if (Event.type == sf::Event::Closed){
 				return (-1);
 			}
-			//Key pressed
+			// ao pressionar botões
 			if (Event.type == sf::Event::KeyPressed){
-				switch (Event.key.code){
+				switch (Event.key.code){ // 
 					case sf::Keyboard::Up:
                         MovaParaCima();
                         break;
@@ -97,54 +122,42 @@ int Menu::Run(sf::RenderWindow &App){
 						break;
 				}
 			}
-			if (Event.type == sf::Event::Resized){
-			    App.setView(sf::View(sf::FloatRect(0, 0, Event.size.width, Event.size.height)));
-                //resizeView(window, view);
-                printf("Nova janela com width: %i e com height: %i \n",Event.size.width,Event.size.height);
-                break;
-            }
-		}// fim eventloop
-		//When getting at alpha_max, we stop modifying the sprite
-//      view.setCenter(menu.getCentro());
-//      App.setView(view);
-		App.clear();
-		desenha(App);
-        App.display();
-	}
+		}// fim loop de eventos
 
-	//Never reaching this point normally, but just in case, exit the application
+		// desenhar coisas na tela
+		App.clear();
+		desenha(App); // chamada de método desenha
+        App.display();
+	} // fim loop da tela
+
+	// não há como chegar até aqui mas, se acontecer, termine o programa.
 	return (-1);
 }
+// fim Run
 
+// Desenha
+// Método que desenha na tela alguns atributos
 void Menu::desenha(sf::RenderWindow & App) const{
-	sf::Vertex vertEsq[] =	{
-    	sf::Vertex(sf::Vector2f(50, altura/3), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(50, altura - 50), sf::Color(0,255,255))
-	};
-	sf::Vertex vertDir[] =	{
-	    sf::Vertex(sf::Vector2f(largura - 50, altura/3), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(largura - 50, altura - 50), sf::Color(0,255,255))
-	};
-	sf::Vertex horCima[] =	{
-	    sf::Vertex(sf::Vector2f(50, altura/3), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(largura - 50, altura/3), sf::Color(0,255,255))
-	};
-	sf::Vertex horBaixo[] =	{
-	    sf::Vertex(sf::Vector2f(50, altura - 50), sf::Color(0,255,255)),
-	    sf::Vertex(sf::Vector2f(largura - 50, altura - 50), sf::Color(0,255,255))
-	};
-	//Clearing screen
+	sf::RectangleShape linhas; // retângulo para linhas
+	// configuração do retangulo
+    linhas.setPosition(sf::Vector2f(50, altura/3));
+    linhas.setFillColor(sf::Color::Black);
+    linhas.setOutlineThickness(1);
+    linhas.setOutlineColor(sf::Color(0,255,255));
+    linhas.setSize(sf::Vector2f(largura-100, altura*2/3 -50));
+
+    // desenha na janela
     App.clear();
 	App.draw(titulo);
+	App.draw(linhas);
 	for(int i = 0; i < maxNumeroItens; i++){
 		App.draw(botao[i]);
 	}
-	App.draw(vertEsq, 2, sf::Lines);
-	App.draw(vertDir, 2, sf::Lines);
-	App.draw(horCima, 2, sf::Lines);
-	App.draw(horBaixo, 2, sf::Lines);
 };
+// fim Desenha
 
+// MovaParaCima
+// Move a seleção de botão para cima
 void Menu::MovaParaCima(){
 	if(numeroItem - 1 >= 0){
 		botao[numeroItem].setFillColor(sf::Color::White);
@@ -152,7 +165,10 @@ void Menu::MovaParaCima(){
 		botao[numeroItem].setFillColor(sf::Color(0,255,255));
 	}
 };
+// fim MovaParaCima
 
+// MovaParaBaixo
+// Move a seleção de botão para baixo
 void Menu::MovaParaBaixo(){
 	if(numeroItem + 1 < maxNumeroItens){
 		botao[numeroItem].setFillColor(sf::Color::White);
@@ -160,4 +176,9 @@ void Menu::MovaParaBaixo(){
 		botao[numeroItem].setFillColor(sf::Color(0,255,255));
 	}
 };
+// fim MovaParaBaixo
+
+// ItemApertado
+// Retorna o número do botão selecionado
 int Menu::ItemApertado(){ return numeroItem; };
+// fim ItemApertado

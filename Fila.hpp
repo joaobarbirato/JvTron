@@ -8,6 +8,7 @@
 		João Gabriel Melo Barbirato			726546
 		Leonardo de Oliveira Peralta		726556
 		Gabrieli Santos						726523
+    
 	Controle de Versão: https://github.com/joaobarbirato/JvTron
 */
 

@@ -11,6 +11,7 @@
 
 	Controle de Versão: https://github.com/joaobarbirato/JvTron
 */
+
 #include <iostream>
 #include "Tela.hpp"
 
@@ -116,7 +117,7 @@ Regras::Regras(float larg, float alt):  maxNumeroTeclas(8){
 // fim construtor
 
 // Destrutor
-// Deleta os ponteiros declarados
+// Deleta o vetor de teclas
 Regras::~Regras(){ 
 	delete infos;
 };
@@ -128,12 +129,12 @@ int Regras::Run(sf::RenderWindow &App){
 	sf::Event Event; // eventos de jogo
 	bool Running = true;
 	while (Running){ // loop da tela
-		// verificação de eventos
+		// Verificação de eventos
 		while (App.pollEvent(Event)){ // loop de eventos
 			if (Event.type == sf::Event::Closed){
 				return (-1);
 			}
-			// evento de 
+			// ao pressionar botões
 			if (Event.type == sf::Event::KeyPressed){
 				switch (Event.key.code){
 					case sf::Keyboard::Return:
@@ -165,16 +166,16 @@ void Regras::desenha(sf::RenderWindow & App) const{
     linhas.setFillColor(sf::Color::Black);
     linhas.setOutlineThickness(1);
     linhas.setOutlineColor(sf::Color(0,255,255));
-    linhas.setSize(sf::Vector2f(App.getSize().x-100, App.getSize().y*4/5 -100));
+    linhas.setSize(sf::Vector2f(largura-100, altura -100));
 
     // desenha na janela
     App.clear();
+	App.draw(linhas);
 	App.draw(titulo);
 	App.draw(botao);
 	for(int i = 0; i < maxNumeroTeclas; i++){
 		App.draw(tecla[i]);
 		App.draw(infos[i]);
 	}
-	App.draw(linhas);
 };
 // fim Desenha
