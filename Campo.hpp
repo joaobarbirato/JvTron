@@ -58,8 +58,19 @@ public:
 
 Campo::Campo(void){
     
-    tron.getForma().getPosition() + tron.getFimCauda();
+    tron.setCor("Verde");
+    rinz.setCor("Laranja");
+    cauda.Reset();
+    cauda2.Reset();
+    tron.mudarDireita();
+    rinz.mudarEsquerda();
+    this->tron.setPosicaoInicial(0,sf::Vector2f(70,80));
+    this->rinz.setPosicaoInicial(2,sf::Vector2f(690, 500));
+    aux1= rinz.getForma().getPosition() + rinz.getFimCauda() + sf::Vector2f(-50.0f,0.0f);// sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX() - 50.0f,rinz.getForma().getPosition().y + rinz.getAuxY());
+    aux= tron.getForma().getPosition() + tron.getFimCauda() + sf::Vector2f(50.0f,0); //::Vector2f(tron.getForma().getPosition().x + tron.getAuxX() + 50.0f,tron.getForma().getPosition().y + tron.getAuxY());
+    inicioTron = tron.getForma().getPosition() + tron.getFimCauda();
     inicioRinz = rinz.getForma().getPosition() + rinz.getFimCauda();
+    printf("%i %i",this->tron.getForma().getPosition().x,this->tron.getForma().getPosition().y);
        
 };
 
@@ -68,25 +79,24 @@ int Campo::Run(sf::RenderWindow &App){
     sf::Sprite SAux;
     bool indo,indo2= false;
     bool Running = true;
-    tron.setCor("Verde");
-    rinz.setCor("Laranja");
-    cauda.Reset();
-    cauda2.Reset();
-    tron.mudarDireita();
-    rinz.mudarEsquerda();
-    this->tron.setPosicaoInicial(0,sf::Vector2f(60,60));
-    this->rinz.setPosicaoInicial(2,sf::Vector2f(App.getSize().x-100, App.getSize().y*4/5 -80));
-    aux1= rinz.getForma().getPosition() + rinz.getFimCauda() + sf::Vector2f(-50.0f,0.0f);// sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX() - 50.0f,rinz.getForma().getPosition().y + rinz.getAuxY());
-    aux= tron.getForma().getPosition() + tron.getFimCauda() + sf::Vector2f(50.0f,0); //::Vector2f(tron.getForma().getPosition().x + tron.getAuxX() + 50.0f,tron.getForma().getPosition().y + tron.getAuxY());
-    inicioTron = tron.getForma().getPosition() + tron.getFimCauda();
-    inicioRinz = rinz.getForma().getPosition() + rinz.getFimCauda();
-    printf("%i %i",this->tron.getForma().getPosition().x,this->tron.getForma().getPosition().y);
+    sf::RectangleShape linha1,linha2,linha3,linha4;
 
-    retanguloBordas.setPosition(sf::Vector2f(50, 50));
+
+    retanguloBordas.setPosition(sf::Vector2f(50,65));
     retanguloBordas.setFillColor(sf::Color::Black);
     retanguloBordas.setOutlineThickness(1);
     retanguloBordas.setOutlineColor(sf::Color(0,255,255));
-    retanguloBordas.setSize(sf::Vector2f(App.getSize().x-100, App.getSize().y*4/5 -100));
+    retanguloBordas.setSize(sf::Vector2f(App.getSize().x-100, App.getSize().y - 130 ));
+    
+    
+    linha1.setPosition(sf::Vector2f(50, 65));
+    linha1.setSize(sf::Vector2f(App.getSize().x-100, 1.0f));
+    linha2.setPosition(sf::Vector2f(50, 65));
+    linha2.setSize(sf::Vector2f(1.0f, App.getSize().y - 130));
+    linha3.setPosition(sf::Vector2f(50 + App.getSize().x-100, 65));
+    linha3.setSize(sf::Vector2f(1.0f , App.getSize().y - 130));
+    linha4.setPosition(sf::Vector2f(50, 65 + App.getSize().y - 130));
+    linha4.setSize(sf::Vector2f(App.getSize().x-100, 1.0f));
     
     std::map<std::string,MyKeys> Keys;
     MyKeys key;
@@ -288,7 +298,13 @@ int Campo::Run(sf::RenderWindow &App){
                 caudaR.Retira(s,ok);
                 caudaR.Insere(s,ok);
         }    
-            
+        if(tron.getForma().getGlobalBounds().intersects(linha1.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(linha2.getGlobalBounds())
+             || tron.getForma().getGlobalBounds().intersects(linha3.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(linha4.getGlobalBounds()) )
+        
+            return 3;
+        if(rinz.getForma().getGlobalBounds().intersects(linha1.getGlobalBounds()) || rinz.getForma().getGlobalBounds().intersects(linha2.getGlobalBounds())
+             || rinz.getForma().getGlobalBounds().intersects(linha3.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(linha4.getGlobalBounds()) )
+            return 2;
 //             if (j >=caudaT.getNElementos() || j >= caudaR.getNElementos() ){
 //                 break;
                 
@@ -318,26 +334,55 @@ int Campo::Run(sf::RenderWindow &App){
 }
 
 void Campo::desenha(sf::RenderWindow & App) const{
-    const float tamanhoFonte = 20;
+    const float tamanhoFonte = 30;
+    int i;
 
     sf::Text titulo;
     sf::Font fonte;
+    sf::RectangleShape sombraTexto;
     sf::RectangleShape retanguloTrasExibicao;
-    retanguloTrasExibicao.setPosition(sf::Vector2f(40, 40));
+    sf::RectangleShape linha;
+    
+    linha.setPosition(sf::Vector2f(0, 0));
+    linha.setFillColor(sf::Color(0,255,255));
+    linha.setSize(sf::Vector2f(800.0f, 1.0f ));
+        
+    retanguloTrasExibicao.setPosition(sf::Vector2f(40, 55));
     retanguloTrasExibicao.setFillColor(sf::Color::Black);
     retanguloTrasExibicao.setOutlineThickness(1);
     retanguloTrasExibicao.setOutlineColor(sf::Color(0,255,255));
-    retanguloTrasExibicao.setSize(sf::Vector2f(App.getSize().x-80, App.getSize().y*4/5 -80));
+    retanguloTrasExibicao.setSize(sf::Vector2f(App.getSize().x-80, App.getSize().y - 110 ));
 
     if(!fonte.loadFromFile("Tr2n.ttf")){}
 
+    for(i=0;i<21; i++){
+        linha.setPosition(sf::Vector2f(0, 30*i));
+        App.draw(linha);
+    }
+    
+    linha.setSize(sf::Vector2f(1.0f, 600.0f ));
+    for(i=0;i<21; i++){
+        linha.setPosition(sf::Vector2f(40*i, 0));
+        App.draw(linha);
+    }
+    sombraTexto.setPosition((sf::Vector2f(App.getSize().x/2 - tamanhoFonte*2 - 8, 14)));
+    sombraTexto.setFillColor(sf::Color::Black);
+    sombraTexto.setSize(sf::Vector2f(140,30));
+    sombraTexto.setOutlineThickness(1);
+    sombraTexto.setOutlineColor(sf::Color(0,255,255));
+    
     titulo.setFont(fonte);
     titulo.setString("JvTron");
     titulo.setCharacterSize(tamanhoFonte);
-    titulo.setPosition(sf::Vector2f(App.getSize().x/2 - tamanhoFonte*3, 10));
+    titulo.setPosition(sf::Vector2f(App.getSize().x/2 - tamanhoFonte*2 - 3, 10));
     titulo.setFillColor(sf::Color(0,255,255));
 
     //desenha na tela o ratro e a tron
+    App.draw(sombraTexto);
+    App.draw(titulo);
+    titulo.setPosition(sf::Vector2f(App.getSize().x/2 - tamanhoFonte*2 - 3, App.getSize().y - 50));
+    sombraTexto.setPosition((sf::Vector2f(App.getSize().x/2 - tamanhoFonte*2 - 8, App.getSize().y - 46)));
+    App.draw(sombraTexto);
     App.draw(titulo);
     App.draw(retanguloTrasExibicao);
     App.draw(retanguloBordas);
@@ -356,19 +401,8 @@ void Campo::DinamicaSprite(Fila<sf::RectangleShape>& F, sf::Vector2f& posInicial
         }else{
             if(posFinal.x == posInicial.x){ // moveu na vertical
                 linha.setSize(sf::Vector2f(1.0f, meuAbs(posFinal.y - posInicial.y)));
-            }else{
-                printf("----------------\n");
-                printf("%f     %f\n",posFinal.x,posFinal.y);
-                printf("%f     %f\n",posInicial.x,posInicial.y);
-                printf("----------------\n");
-                std::cout<<"sucesso"<<std::endl;
             }
         }
-        printf("----------------\n");
-                printf("%f     %f\n",posFinal.x,posFinal.y);
-                printf("%f     %f\n",posInicial.x,posInicial.y);
-                printf("----------------\n");
-                std::cout<<"poha"<<std::endl;
         F.Insere(linha,ok);
     
 };

@@ -39,7 +39,7 @@ int main (){
     // Preparacao das tela
     Menu * s0 = new Menu(App.getSize().x, App.getSize().y); // TELA 0: menu do jogo
     Screens.push_back(s0);
-    Campo * s1 = new Campo; // TELA 1: campo do jogo
+    Campo * s1 = new Campo(); // TELA 1: campo do jogo
     Screens.push_back(s1);
     Ganhou * s2 = new Ganhou(App.getSize().x, App.getSize().y, sf::Color(0, 255, 255)); // TELA 2: azul ganhou
     Screens.push_back(s2);
@@ -62,7 +62,9 @@ int main (){
 
     // loop principal
     while (screen >= 0){
-        screen = Screens[screen]->Run(App); // chamada do metodo que faz funcionar a tela atual
+        if( (screen = Screens[screen]->Run(App)) == 1)
+            Screens[1] = new Campo();
+            // chamada do metodo que faz funcionar a tela atual
     } // fim loop principal
 
     return EXIT_SUCCESS; // fim do programa

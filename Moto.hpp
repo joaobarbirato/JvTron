@@ -48,7 +48,10 @@ public: // métodos públicos
 // Implementação dos métodos da moto
 
 // Construtor
-Moto::Moto(){};
+Moto::Moto(){
+    
+    posicao=-1;
+};
 
 // Destrutor
 Moto::~Moto(){};
@@ -57,22 +60,23 @@ Moto::~Moto(){};
 // Virar a moto para cima
 void Moto::mudarCima(){
     sf::Sprite novaSprite; // para configurar a nova textura
+    if(posicao != 3 && posicao != 1 ){
+        textura.loadFromFile(cor+"/cima.png");
+        novaSprite.setTexture(textura);
 
-    textura.loadFromFile(cor+"/cima.png");
-    novaSprite.setTexture(textura);
+        if(posicao == 0){ // se está virada pra direita
+            novaSprite.setPosition(sf::Vector2f(forma.getPosition().x - (forma.getTexture()->getSize().x)/2    ,forma.getPosition().y - novaSprite.getTexture()->getSize().y + forma.getTexture()->getSize().x/2  ));
+        }
+        if(posicao == 2){ // se está virada pra esquerda
+            novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + forma.getTexture()->getSize().y - novaSprite.getTexture()->getSize().x/2 , forma.getPosition().y + forma.getTexture()->getSize().x/2 - novaSprite.getTexture()->getSize().y ) );
+        }
 
-    if(posicao == 0){ // se está virada pra direita
-        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x - (forma.getTexture()->getSize().x)/2    ,forma.getPosition().y - novaSprite.getTexture()->getSize().y + forma.getTexture()->getSize().x/2  ));
+        fimCauda.x = (novaSprite.getTexture()->getSize().x)/2;
+        fimCauda.y = novaSprite.getTexture()->getSize().y;
+
+        forma = novaSprite; // armazena a nova textura
+        posicao = 1; // guarda posição p/ cima
     }
-    if(posicao == 2){ // se está virada pra esquerda
-        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + forma.getTexture()->getSize().y - novaSprite.getTexture()->getSize().x/2 , forma.getPosition().y + forma.getTexture()->getSize().x/2 - novaSprite.getTexture()->getSize().y ) );
-    }
-
-    fimCauda.x = (novaSprite.getTexture()->getSize().x)/2;
-    fimCauda.y = novaSprite.getTexture()->getSize().y;
-
-    forma = novaSprite; // armazena a nova textura
-    posicao = 1; // guarda posição p/ cima
 };
 // fim mudarCima
 
@@ -81,21 +85,23 @@ void Moto::mudarCima(){
 void Moto::mudarBaixo(){
     sf::Sprite novaSprite; // para configurar a nova textura
 
+    if(posicao != 3 && posicao != 1 ){
+        
     textura.loadFromFile(cor+"/baixo.png");
     novaSprite.setTexture(textura);
+        if(posicao == 0){ // se está virada pra direita
+            novaSprite.setPosition(sf::Vector2f(forma.getPosition().x - (novaSprite.getTexture()->getSize().x)/2  ,forma.getPosition().y + (forma.getTexture()->getSize().x)/2));
+        }
+        if(posicao == 2){ // se está virada pra esquerda
+            novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + forma.getTexture()->getSize().y - (novaSprite.getTexture()->getSize().x)/2  , forma.getPosition().y + (forma.getTexture()->getSize().x)/2 ));
+        }
+        
+        fimCauda.x = (novaSprite.getTexture()->getSize().x)/2;
+        fimCauda.y = 0;
 
-    if(posicao == 0){ // se está virada pra direita
-        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x - (novaSprite.getTexture()->getSize().x)/2  ,forma.getPosition().y + (forma.getTexture()->getSize().x)/2));
+        forma = novaSprite; // armazena a nova textura
+        posicao = 3; // guarda a posição p/ baixo
     }
-    if(posicao == 2){ // se está virada pra esquerda
-        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + forma.getTexture()->getSize().y - (novaSprite.getTexture()->getSize().x)/2  , forma.getPosition().y + (forma.getTexture()->getSize().x)/2 ));
-    }
-
-    fimCauda.x = (novaSprite.getTexture()->getSize().x)/2;
-    fimCauda.y = 0;
-
-    forma = novaSprite; // armazena a nova textura
-    posicao = 3; // guarda a posição p/ baixo
 };
 // fim mudarBaixo
 
@@ -104,21 +110,23 @@ void Moto::mudarBaixo(){
 void Moto::mudarDireita(){
     sf::Sprite novaSprite; // para configurar a nova textura
 
-    textura.loadFromFile(cor+"/direita.png");
+    
+    if(posicao != 2 && posicao != 0 ){
+        textura.loadFromFile(cor+"/direita.png");
     novaSprite.setTexture(textura);
+        if(posicao == 3){ // se está virada para baixo
+            novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().y)/2 ,forma.getPosition().y - (novaSprite.getTexture()->getSize().y)/2 ));
+        }
+        if(posicao == 1){ // se está virada para cima
+            novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().y)/2  , forma.getPosition().y + forma.getTexture()->getSize().x - (novaSprite.getTexture()->getSize().y)/2) );
+        }
 
-    if(posicao == 3){ // se está virada para baixo
-        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().y)/2 ,forma.getPosition().y - (novaSprite.getTexture()->getSize().y)/2 ));
+        fimCauda.x = 0;
+        fimCauda.y = (novaSprite.getTexture()->getSize().y)/2;
+
+        forma = novaSprite; // armazena a nova textura
+        posicao = 0; // guarda a posição p/ a direita
     }
-    if(posicao == 1){ // se está virada para cima
-        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().y)/2  , forma.getPosition().y + forma.getTexture()->getSize().x - (novaSprite.getTexture()->getSize().y)/2) );
-    }
-
-    fimCauda.x = 0;
-    fimCauda.y = (novaSprite.getTexture()->getSize().y)/2;
-
-    forma = novaSprite; // armazena a nova textura
-    posicao = 0; // guarda a posição p/ a direita
 };
 // fim mudarDireita
 
@@ -127,21 +135,23 @@ void Moto::mudarDireita(){
 void Moto::mudarEsquerda(){
     sf::Sprite novaSprite; // para configurar a nova textura
 
-    textura.loadFromFile(cor+"/esquerda.png");
+  
+    if(posicao != 2 && posicao != 0 ){
+         textura.loadFromFile(cor+"/esquerda.png");
     novaSprite.setTexture(textura);
+        if(posicao == 3){ // se está virada para baixo
+            novaSprite.setPosition(sf::Vector2f(forma.getPosition().x - novaSprite.getTexture()->getSize().x + (forma.getTexture()->getSize().y)/2   , forma.getPosition().y - (novaSprite.getTexture()->getSize().y)/2 ));
+        }
+        if(posicao == 1){ // se está virada para cima
+            novaSprite.setPosition(sf::Vector2f(forma.getPosition().x  + (forma.getTexture()->getSize().y)/2 - novaSprite.getTexture()->getSize().x   ,forma.getPosition().y - (novaSprite.getTexture()->getSize().y)/2 + forma.getTexture()->getSize().x  ));
+        }
 
-    if(posicao == 3){ // se está virada para baixo
-        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x - novaSprite.getTexture()->getSize().x + (forma.getTexture()->getSize().y)/2   , forma.getPosition().y - (novaSprite.getTexture()->getSize().y)/2 ));
+        fimCauda.x = novaSprite.getTexture()->getSize().x;
+        fimCauda.y = (novaSprite.getTexture()->getSize().y)/2;
+
+        forma = novaSprite; // armazena a nova textura
+        posicao = 2; // guarda a posição p/ a esquerda
     }
-    if(posicao == 1){ // se está virada para cima
-        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x  + (forma.getTexture()->getSize().y)/2 - novaSprite.getTexture()->getSize().x   ,forma.getPosition().y - (novaSprite.getTexture()->getSize().y)/2 + forma.getTexture()->getSize().x  ));
-    }
-
-    fimCauda.x = novaSprite.getTexture()->getSize().x;
-    fimCauda.y = (novaSprite.getTexture()->getSize().y)/2;
-
-    forma = novaSprite; // armazena a nova textura
-    posicao = 2; // guarda a posição p/ a esquerda
 };
 // fim mudarEsquerda
 
