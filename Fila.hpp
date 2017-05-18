@@ -1,5 +1,14 @@
 /*
-	Cabeçalho da Fila
+	JvTron: Trabalho 1
+	Departamento de Computação
+	UFSCar Universidade Federal de São Carlos
+	Disciplina: Estrutura de Dados
+	Professor: Roberto Ferrari
+	Aluno(a):								RA:
+		João Gabriel Melo Barbirato			726546
+		Leonardo de Oliveira Peralta		726556
+		Gabrieli Santos						726523
+	Controle de Versão: https://github.com/joaobarbirato/JvTron
 */
 
 #include <SFML/Graphics.hpp>
@@ -13,7 +22,7 @@ private: //atributos privados
 	int ultimo;
 	int nElementos;
     Gen elementos[20000];
-public: //atributos publicos
+public: //métodos publicos
 	Fila();
 	~Fila();
 	void Insere( Gen &, bool &);
