@@ -62,7 +62,7 @@ int Campo::Run(sf::RenderWindow &App){
     tron.mudarDireita();
     rinz.mudarEsquerda();
     this->tron.setPosicaoInicial(0,sf::Vector2f(60,60));
-    this->rinz.setPosicaoInicial(2,sf::Vector2f(680,490));
+    this->rinz.setPosicaoInicial(2,sf::Vector2f(App.getSize().x-100, App.getSize().y*4/5 -80));
     printf("%i %i",this->tron.getForma().getPosition().x,this->tron.getForma().getPosition().y);
 
     retanguloBordas.setPosition(sf::Vector2f(50, 50));
@@ -175,14 +175,10 @@ int Campo::Run(sf::RenderWindow &App){
         rinz.mover();
         tron.mover();
      
-        auxCauda.position=tron.getForma().getPosition();
-        auxCauda.position.y+=tron.getAuxY();
-        auxCauda.position.x+=tron.getAuxX();;
+        auxCauda.position=tron.getForma().getPosition() + tron.getFimCauda();
         auxCauda.color = sf::Color(0,255,255);
         cauda.Insere(auxCauda,ok);
-        auxCauda.position=rinz.getForma().getPosition();
-        auxCauda.position.y+=rinz.getAuxY();
-        auxCauda.position.x+=rinz.getAuxX();;
+        auxCauda.position=rinz.getForma().getPosition() + rinz.getFimCauda();
         auxCauda.color = sf::Color(255,60,0);
         cauda2.Insere(auxCauda,ok);
             
