@@ -269,13 +269,14 @@ int Campo::Run(sf::RenderWindow &App){
             InsereParede(paredesRinz, inicioRinz,auxMudaOriR );
             iR = 0;
             inicioRinz=auxMudaOriR;
+            virouRinz=false;
          }
         
 // Verificações de choques nas filas de paredes (onde e por qual moto)
-        for(j = 0; j < paredesTron.getNElementos() - 2 ; j++){ // para paredes na moto azul
+        for(j = 0; j < paredesTron.getNElementos(); j++){ // para paredes na moto azul
                 paredesTron.Retira(tempRetangulo, ok); 
                 paredesTron.Insere(tempRetangulo, ok);
-                if(tron.getForma().getGlobalBounds().intersects(tempRetangulo.getGlobalBounds())){ // se a azul bate
+                if(tron.getForma().getGlobalBounds().intersects(tempRetangulo.getGlobalBounds()) && j < paredesTron.getNElementos() - 2){ // se a azul bate
                     return (3); // a laranja ganha (TELA 3: Ganhou em laranja)
                     break;
                 }
@@ -285,33 +286,22 @@ int Campo::Run(sf::RenderWindow &App){
                 } 
                 semChoqueT = true;
         }
-        if(paredesTron.getNElementos() > 2 && semChoqueT == true){
-                paredesTron.Retira(tempRetangulo, ok);
-                paredesTron.Insere(tempRetangulo, ok);
-                paredesTron.Retira(tempRetangulo, ok);
-                paredesTron.Insere(tempRetangulo, ok);
-        }
+ 
 
-        for(j = 0; j <=paredesRinz.getNElementos() ; j++){ // para paredes na moto laranja
+        for(j = 0; j < paredesRinz.getNElementos(); j++){ // para paredes na moto laranja
                 paredesRinz.Retira(tempRetangulo, ok);
                 paredesRinz.Insere(tempRetangulo, ok);
                 if(tron.getForma().getGlobalBounds().intersects(tempRetangulo.getGlobalBounds()) ){ // se a azul bate
                     return (3); // a laranja ganha (TELA 3: Ganhou em laranja)
                     break;
                 }
-                if(rinz.getForma().getGlobalBounds().intersects(tempRetangulo.getGlobalBounds()) ){
+                if(rinz.getForma().getGlobalBounds().intersects(tempRetangulo.getGlobalBounds()) && j < paredesRinz.getNElementos() - 2 ){
                     return (2); // a laranja ganha (TELA 2: Ganhou em azul)
                     break;
                 }
                 semChoqueR = true;
         }
-        if(paredesRinz.getNElementos() > 2 && semChoqueT == true){
-                paredesRinz.Retira(tempRetangulo, ok);
-                paredesRinz.Insere(tempRetangulo, ok);
-                paredesRinz.Retira(tempRetangulo, ok);
-                paredesRinz.Insere(tempRetangulo, ok);
-        }
-
+       
         // Verificações de choque nas paredes do campo
         if(     tron.getForma().getGlobalBounds().intersects(linha1.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(linha2.getGlobalBounds())
              || tron.getForma().getGlobalBounds().intersects(linha3.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(linha4.getGlobalBounds()) ) // se a azul bate
