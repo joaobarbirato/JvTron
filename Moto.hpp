@@ -1,25 +1,38 @@
+/*
+    JvTron: Trabalho 1
+    Departamento de Computação
+    UFSCar Universidade Federal de São Carlos
+    Disciplina: Estrutura de Dados
+    Professor: Roberto Ferrari
+    Aluno(a):                               RA:
+        João Gabriel Melo Barbirato         726546
+        Leonardo de Oliveira Peralta        726556
+        Gabrieli Santos                     726523
+    
+    Controle de Versão: https://github.com/joaobarbirato/JvTron
+*/
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Fila.hpp"
 
+// Estrutura da Moto
 class Moto{
-private:
-    Fila<sf::Vertex> cauda;
+private: // atributos privados
+    std::string cor; // nome da cor
     sf::Sprite forma;
     sf::Texture textura;
-    int auxX;
-    int auxY;
-    std::string cor;
-    sf::Color RGB;
-public:
+    sf::Vector2f fimCauda; // onde a cauda é colada na moto
+    sf::Color RGB; // cor na classe da biblioteca
+public: // métodos públicos
     Moto();
     ~Moto();
 
-    void mover();
-    int getAuxX();
-    int getAuxY();
+    sf::Vector2f getFimCauda() const;
+    sf::Sprite getForma() const;
+    sf::Color getRGB() const;
 
-    sf::Sprite getForma();
+    void mover();
     void mudarCima();
     void mudarBaixo();
     void mudarEsquerda();
@@ -27,99 +40,114 @@ public:
 
     void setPosicaoInicial(int,sf::Vector2f);
     void setCor(std::string);
-    sf::Color getRGB() const ;
+
+    // atributo privado
     int posicao;
 };
-/*
-	Implementação dos métodos da Fila
-*/
+
+// Implementação dos métodos da moto
+
+// Construtor
 Moto::Moto(){};
 
+// Destrutor
 Moto::~Moto(){};
 
+// mudarCima
+// Virar a moto para cima
 void Moto::mudarCima(){
-    sf::Sprite auxMoto;
+    sf::Sprite novaSprite; // para configurar a nova textura
 
     textura.loadFromFile(cor+"/cima.png");
-    auxMoto.setTexture(textura);
+    novaSprite.setTexture(textura);
 
-    if(posicao == 0){
-        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x - (forma.getTexture()->getSize().x)/2    ,forma.getPosition().y - auxMoto.getTexture()->getSize().y + forma.getTexture()->getSize().x/2  ));
+    if(posicao == 0){ // se está virada pra direita
+        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x - (forma.getTexture()->getSize().x)/2    ,forma.getPosition().y - novaSprite.getTexture()->getSize().y + forma.getTexture()->getSize().x/2  ));
     }
-    if(posicao == 2){
-        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + forma.getTexture()->getSize().y - auxMoto.getTexture()->getSize().x/2 , forma.getPosition().y + forma.getTexture()->getSize().x/2 - auxMoto.getTexture()->getSize().y ) );
+    if(posicao == 2){ // se está virada pra esquerda
+        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + forma.getTexture()->getSize().y - novaSprite.getTexture()->getSize().x/2 , forma.getPosition().y + forma.getTexture()->getSize().x/2 - novaSprite.getTexture()->getSize().y ) );
     }
 
-    auxX=(auxMoto.getTexture()->getSize().x)/2;
-    auxY=auxMoto.getTexture()->getSize().y;
+    fimCauda.x = (novaSprite.getTexture()->getSize().x)/2;
+    fimCauda.y = novaSprite.getTexture()->getSize().y;
 
-    forma=auxMoto;
-    posicao=1;
+    forma = novaSprite; // armazena a nova textura
+    posicao = 1; // guarda posição p/ cima
 };
+// fim mudarCima
 
+// mudarBaixo
+// Virar a moto para baixo
 void Moto::mudarBaixo(){
-    sf::Sprite auxMoto;
+    sf::Sprite novaSprite; // para configurar a nova textura
 
     textura.loadFromFile(cor+"/baixo.png");
-    auxMoto.setTexture(textura);
+    novaSprite.setTexture(textura);
 
-    if(posicao == 0){
-        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x - (auxMoto.getTexture()->getSize().x)/2  ,forma.getPosition().y + (forma.getTexture()->getSize().x)/2));
+    if(posicao == 0){ // se está virada pra direita
+        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x - (novaSprite.getTexture()->getSize().x)/2  ,forma.getPosition().y + (forma.getTexture()->getSize().x)/2));
     }
-    if(posicao == 2){
-        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + forma.getTexture()->getSize().y - (auxMoto.getTexture()->getSize().x)/2  , forma.getPosition().y + (forma.getTexture()->getSize().x)/2 ));
+    if(posicao == 2){ // se está virada pra esquerda
+        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + forma.getTexture()->getSize().y - (novaSprite.getTexture()->getSize().x)/2  , forma.getPosition().y + (forma.getTexture()->getSize().x)/2 ));
     }
 
+    fimCauda.x = (novaSprite.getTexture()->getSize().x)/2;
+    fimCauda.y = 0;
 
-        auxX= (auxMoto.getTexture()->getSize().x)/2;
-        auxY=0;
-
-    forma=auxMoto;
-    posicao=3;
+    forma = novaSprite; // armazena a nova textura
+    posicao = 3; // guarda a posição p/ baixo
 };
+// fim mudarBaixo
+
+// mudarDireita
+// Virar a moto para a direita
 void Moto::mudarDireita(){
-    sf::Sprite auxMoto;
+    sf::Sprite novaSprite; // para configurar a nova textura
 
     textura.loadFromFile(cor+"/direita.png");
-    auxMoto.setTexture(textura);
+    novaSprite.setTexture(textura);
 
-    if(posicao == 3){
-        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().y)/2 ,forma.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 ));
+    if(posicao == 3){ // se está virada para baixo
+        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().y)/2 ,forma.getPosition().y - (novaSprite.getTexture()->getSize().y)/2 ));
     }
-    if(posicao == 1){
-        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().y)/2  , forma.getPosition().y + forma.getTexture()->getSize().x - (auxMoto.getTexture()->getSize().y)/2) );
+    if(posicao == 1){ // se está virada para cima
+        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x + (forma.getTexture()->getSize().y)/2  , forma.getPosition().y + forma.getTexture()->getSize().x - (novaSprite.getTexture()->getSize().y)/2) );
     }
 
+    fimCauda.x = 0;
+    fimCauda.y = (novaSprite.getTexture()->getSize().y)/2;
 
-        auxX=0;
-        auxY=(auxMoto.getTexture()->getSize().y)/2;
-
-     forma=auxMoto;
-    posicao=0;
-
+    forma = novaSprite; // armazena a nova textura
+    posicao = 0; // guarda a posição p/ a direita
 };
+// fim mudarDireita
+
+// mudarEsquerda
+// Virar a moto para a esquerda
 void Moto::mudarEsquerda(){
-    sf::Sprite auxMoto;
+    sf::Sprite novaSprite; // para configurar a nova textura
 
     textura.loadFromFile(cor+"/esquerda.png");
-    auxMoto.setTexture(textura);
+    novaSprite.setTexture(textura);
 
-    if(posicao == 1){
-        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x  + (forma.getTexture()->getSize().y)/2 - auxMoto.getTexture()->getSize().x   ,forma.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 + forma.getTexture()->getSize().x  ));
+    if(posicao == 3){ // se está virada para baixo
+        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x - novaSprite.getTexture()->getSize().x + (forma.getTexture()->getSize().y)/2   , forma.getPosition().y - (novaSprite.getTexture()->getSize().y)/2 ));
     }
-    if(posicao == 3){
-        auxMoto.setPosition(sf::Vector2f(forma.getPosition().x - auxMoto.getTexture()->getSize().x + (forma.getTexture()->getSize().y)/2   , forma.getPosition().y - (auxMoto.getTexture()->getSize().y)/2 ));
+    if(posicao == 1){ // se está virada para cima
+        novaSprite.setPosition(sf::Vector2f(forma.getPosition().x  + (forma.getTexture()->getSize().y)/2 - novaSprite.getTexture()->getSize().x   ,forma.getPosition().y - (novaSprite.getTexture()->getSize().y)/2 + forma.getTexture()->getSize().x  ));
     }
 
+    fimCauda.x = novaSprite.getTexture()->getSize().x;
+    fimCauda.y = (novaSprite.getTexture()->getSize().y)/2;
 
-        auxX=auxMoto.getTexture()->getSize().x;
-        auxY=(auxMoto.getTexture()->getSize().y)/2;
-
-     forma=auxMoto;
-    posicao=2;
-
-
+    forma = novaSprite; // armazena a nova textura
+    posicao = 2; // guarda a posição p/ a esquerda
 };
+// fim mudarEsquerda
+
+// mover
+// Move a moto utilizando a forma como classe da biblioteca gráfica
+// Move-se de acordo com a posição
 void Moto::mover(){
     if(posicao == 0)
         forma.move(0.5f,0.0f);
@@ -131,25 +159,32 @@ void Moto::mover(){
         forma.move(0.0f,0.5f);
     }
 };
-int Moto::getAuxX(){
+// fim mover
 
-    return auxX;
+// getFimCauda
+// retorna o fim da cauda (onde ela é grudada na moto)
+sf::Vector2f Moto::getFimCauda() const{
+    return fimCauda;
 };
-int Moto::getAuxY(){
+// fim getFimCauda
 
-    return auxY;
-};
-
-sf::Sprite Moto::getForma(){
-
+// getForma
+// Retorna a forma da moto
+sf::Sprite Moto::getForma() const{
     return forma;
-}
+};
+// fim getForma
 
-void Moto::setPosicaoInicial(int x,sf::Vector2f vetor){
+// setPosicaoInicial
+// Determina a posicao inicial da moto
+void Moto::setPosicaoInicial(int x, sf::Vector2f vetor){
     posicao=x;
     forma.setPosition(vetor);
 }
+// fim setPosicaoInicial
 
+// setCor
+// Determina o nome da cor
 void Moto::setCor(std::string c){
     cor=c;
     if(cor == "Verde")
@@ -157,5 +192,4 @@ void Moto::setCor(std::string c){
     if(cor == "Laranja")
         RGB = sf::Color(255,60,0);
 };
-
-sf::Color Moto::getRGB() const { return RGB; };
+// fim setCor
