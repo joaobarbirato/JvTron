@@ -2,7 +2,6 @@
 #include <fstream>
 #include "Tela.hpp"
 #include "Moto.hpp"
-#include "Disco.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -41,7 +40,6 @@ private:
     int j=0;
     sf::RectangleShape s,s1;
 
-    Disco d;
     Fila<sf::RectangleShape> FRecT, FRecR;
     sf::Vector2f inicioTron, inicioRinz;
 
@@ -226,7 +224,6 @@ int Campo::Run(sf::RenderWindow &App){
       
         
         App.draw(cauda2.getDesenhoRastro(),cauda2.getNElementos(),sf::Points);
-//        d.aparece( float(rand() % (App.getSize().x-50) + 50), float(rand() % (App.getSize().y-50)-20) + 50 , App);
         App.draw(cauda.getDesenhoRastro(),cauda.getNElementos(),sf::Points);
         App.draw(rinz.getForma());
         App.draw(tron.getForma());
