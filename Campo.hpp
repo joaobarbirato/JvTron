@@ -33,39 +33,55 @@ private:
     Moto rinz; //(sf::Color(255,60,0));
     Fila<sf::Vertex> cauda;
     Fila<sf::Vertex> cauda2;
-    Fila<sf::Vertex> aux,aux1;
+    Fila<sf::RectangleShape> caudaT,caudaR;
+    Fila<sf::RectangleShape> auxC;
+    sf::Vector2f aux,aux1;
     sf::Vertex auxCauda;
+    bool virou =false;
+    bool virou2 =false;
     bool ok;
-    int iT=0, iR; // iterators
+    int iT=0, iR=0; // iterators
     int j=0;
     sf::RectangleShape s,s1;
 
     Disco d;
-    Fila<sf::RectangleShape> FRecT, FRecR;
     sf::Vector2f inicioTron, inicioRinz;
 
-    void DinamicaSprite(Fila<sf::RectangleShape>&,int&, sf::Vector2f&, Moto&);
+    void DinamicaSprite(Fila<sf::RectangleShape>&, sf::Vector2f&, sf::Vector2f&);
+    void imprimeShapes(sf::RenderWindow &);
+    float meuAbs(const float&);
 public:
     Campo(void);
     virtual int Run(sf::RenderWindow &App);
     void desenha(sf::RenderWindow &) const;
 };
 
-Campo::Campo(void){};
+Campo::Campo(void){
+    
+    inicioTron = sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+    inicioRinz = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY());
+             
+       
+};
 
 int Campo::Run(sf::RenderWindow &App){
     sf::Event Event;
     sf::Sprite SAux;
+    bool indo,indo2= false;
     bool Running = true;
     tron.setCor("Verde");
     rinz.setCor("Laranja");
-    
+    cauda.Reset();
+    cauda2.Reset();
     tron.mudarDireita();
     rinz.mudarEsquerda();
     this->tron.setPosicaoInicial(0,sf::Vector2f(60,60));
     this->rinz.setPosicaoInicial(2,sf::Vector2f(680,490));
-    printf("%i %i",this->tron.getForma().getPosition().x,this->tron.getForma().getPosition().y);
-    
+    aux1= sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX() - 50.0f,rinz.getForma().getPosition().y + rinz.getAuxY());
+    aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX() + 50.0f,tron.getForma().getPosition().y + tron.getAuxY());
+    inicioTron = sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+    inicioRinz = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY());
+         
     std::map<std::string,MyKeys> Keys;
     MyKeys key;
 
@@ -132,43 +148,58 @@ int Campo::Run(sf::RenderWindow &App){
             }
             // teclas tron
             if (TestEvent(Keys["tron-Direita"], Event)){
-                iT = 500;
+                iT = 50;
+                 aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
                 tron.mudarDireita();
+                 virou=true; 
             }
             if (TestEvent(Keys["tron-Esquerda"], Event)){
-                iT = 500;
+                iT = 50;
+                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
                 tron.mudarEsquerda(); 
+                 virou=true; 
             }
             if (TestEvent(Keys["tron-Cima"], Event)){
-                iT = 500;
+                iT = 50;
+                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
                 tron.mudarCima();
+                 virou=true; 
             }
             if (TestEvent(Keys["tron-Baixo"], Event)){
-                iT = 500;
+                iT = 50;
+                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
                 tron.mudarBaixo();
+                 virou=true; 
             }
 
             // teclas rinzzler
             if (TestEvent(Keys["rinz-Direita"], Event)){
-                iR = 500;
+                iR = 50;
+                virou=true; 
+                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
                 rinz.mudarDireita();
             }
             if (TestEvent(Keys["rinz-Esquerda"], Event)){
-                iR = 500;
+                iR = 50;
+                virou=true;
+                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
                 rinz.mudarEsquerda(); 
             }
             if (TestEvent(Keys["rinz-Cima"], Event)){
-                iR = 500;
+                iR = 50;
+                virou=true;
+                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
                 rinz.mudarCima();
             }
             if (TestEvent(Keys["rinz-Baixo"], Event)){
-                iR = 500;
+                iR = 50;    
+                virou=true;
+                aux1 = sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY()); 
                 rinz.mudarBaixo();
             }
         }
         
-        rinz.mover();
-        tron.mover();
+        
      
         auxCauda.position=tron.getForma().getPosition();
         auxCauda.position.y+=tron.getAuxY();
@@ -180,54 +211,95 @@ int Campo::Run(sf::RenderWindow &App){
         auxCauda.position.x+=rinz.getAuxX();;
         auxCauda.color = sf::Color(255,60,0);
         cauda2.Insere(auxCauda,ok);
-            
-        if(!iT)
-            inicioTron = tron.getForma().getPosition();
-        if(!iR)
-            inicioRinz = rinz.getForma().getPosition();
 
-        DinamicaSprite(FRecT, iT, inicioTron, tron);
-        DinamicaSprite(FRecR, iR, inicioRinz, rinz);
+        if(iT==50){
+            if(!virou)
+                aux= sf::Vector2f(tron.getForma().getPosition().x + tron.getAuxX(),tron.getForma().getPosition().y + tron.getAuxY());
+            DinamicaSprite(caudaT, inicioTron,aux );
+            iT=0;
+            inicioTron=aux;
+            virou=false;
+        }
+         if(iR==50){
+            if(!virou2)
+                aux1= sf::Vector2f(rinz.getForma().getPosition().x + rinz.getAuxX(),rinz.getForma().getPosition().y + rinz.getAuxY());
+            
+            DinamicaSprite(caudaR, inicioRinz,aux1 );
+            iR=0;
+            inicioRinz=aux1;
+         }
+                     
+        
         
         //desenha na tela o ratro e a tron
         desenha(App);
 //         ver funcionamento da cauda - a parte da info
-        aux=cauda;
-        aux1=cauda2;
         
-
-        s.setSize(sf::Vector2f(1,1));
-        s1.setSize(sf::Vector2f(1,1));
-        for(j=0;j<cauda.getNElementos() - 100;j++){
-            aux.Retira(auxCauda,ok);
-            s.setPosition(auxCauda.position);
-            aux1.Retira(auxCauda,ok);
-            s1.setPosition(auxCauda.position);
-            if(tron.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) || tron.getForma().getGlobalBounds().intersects(s1.getGlobalBounds())  ){
-                 printf("Fudeu 1 \n");    
-                 return 3;
-                  break;
-            }
-//            printf("%i\n",j);
-            if(rinz.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) || rinz.getForma().getGlobalBounds().intersects(s1.getGlobalBounds()) ){
+        for(j=0;j < caudaT.getNElementos() - 2 ;j++  ){
+                caudaT.Retira(s,ok);
+                caudaT.Insere(s,ok);
+                if(tron.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) ){
+                    printf("Fudeu 1 \n");    
+                    return 3;
+                    break;
+                }
+                if(rinz.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) ){
                  printf("Fudeu 2 \n");
                  return 2;
                  break;
-            }   
+                } 
+                indo = true;
         }
+        if(caudaT.getNElementos() > 2 && indo == true){
+                caudaT.Retira(s,ok);
+                caudaT.Insere(s,ok);
+                caudaT.Retira(s,ok);
+                caudaT.Insere(s,ok);
+        }
+        for(j=0;j <=caudaR.getNElementos() ;j++  ){
+                caudaR.Retira(s,ok);
+                 caudaR.Insere(s,ok);
+                if(tron.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) ){
+                    printf("Fudeu 1 \n");    
+                    return 3;
+                    break;
+                }
+                if(rinz.getForma().getGlobalBounds().intersects(s.getGlobalBounds()) ){
+                 printf("Fudeu 2 \n");
+                 return 2;
+                 break;
+                }
+                indo2=true;
+        }
+         if(caudaR.getNElementos() > 2 && indo == true){
+                caudaR.Retira(s,ok);
+                caudaR.Insere(s,ok);
+                caudaR.Retira(s,ok);
+                caudaR.Insere(s,ok);
+        }    
+            
+//             if (j >=caudaT.getNElementos() || j >= caudaR.getNElementos() ){
+//                 break;
+                
+            
+            
+                
+        rinz.mover();
+        tron.mover();
       
-      
-        
-        App.draw(cauda2.getDesenhoRastro(),cauda2.getNElementos(),sf::Points);
+         iT=iT+1;
+        iR=iR+1;
+//        imprimeShapes(App);
+//         App.draw(cauda2.getDesenhoRastro(),cauda2.getNElementos(),sf::Points);
 //        d.aparece( float(rand() % (App.getSize().x-50) + 50), float(rand() % (App.getSize().y-50)-20) + 50 , App);
         App.draw(cauda.getDesenhoRastro(),cauda.getNElementos(),sf::Points);
         App.draw(rinz.getForma());
         App.draw(tron.getForma());
+//         App.draw(s);
         App.display();
         //limpa a tela 
         App.clear();
-        iT++;
-        iR++;
+       
     }
     //Never reaching this point normally, but just in case, exit the application
     return -1;
@@ -301,16 +373,55 @@ void Campo::desenha(sf::RenderWindow & App) const{
     return;
 }
 
-void Campo::DinamicaSprite(Fila<sf::RectangleShape>& F,int& i, sf::Vector2f& posInicial, Moto& m){
+void Campo::DinamicaSprite(Fila<sf::RectangleShape>& F, sf::Vector2f& posInicial, sf::Vector2f& posFinal){
     // Dinâmica de inserir sprites p/ verificacao de colisoes
-    if(i==500){
+        bool ok;
+    
         sf::RectangleShape linha;
+        sf::Vertex f;
         linha.setPosition(posInicial);
-        linha.setFillColor(sf::Color(0,255,255));
-        if(m.getForma().getPosition().y == posInicial.y) // moveu na horizontal
-            linha.setSize(sf::Vector2f(float(abs(m.getForma().getPosition().y - posInicial.y)),1.0f));
-        if(m.getForma().getPosition().x == posInicial.x) // moveu na vertical
-            linha.setSize(sf::Vector2f(1.0f, float(abs(m.getForma().getPosition().x - posInicial.x))));
-        i = 0;
-    }
+        if(posFinal.y == posInicial.y){ // moveu na horizontal
+            linha.setSize(sf::Vector2f(meuAbs(posFinal.x - posInicial.x), 1.0f));
+        }else{
+            if(posFinal.x == posInicial.x){ // moveu na vertical
+                linha.setSize(sf::Vector2f(1.0f, meuAbs(posFinal.y - posInicial.y)));
+            }else{
+                printf("----------------\n");
+                printf("%f     %f\n",posFinal.x,posFinal.y);
+                printf("%f     %f\n",posInicial.x,posInicial.y);
+                printf("----------------\n");
+                std::cout<<"sucesso"<<std::endl;
+            }
+        }
+        printf("----------------\n");
+                printf("%f     %f\n",posFinal.x,posFinal.y);
+                printf("%f     %f\n",posInicial.x,posInicial.y);
+                printf("----------------\n");
+                std::cout<<"poha"<<std::endl;
+        F.Insere(linha,ok);
+    
 };
+
+float Campo::meuAbs(const float& a){
+    if(a < 0)
+        return -a;
+    return a;
+}
+
+void Campo::imprimeShapes(sf::RenderWindow & app){
+    sf::RectangleShape auxrs;
+    Fila<sf::RectangleShape> auxf;
+    bool auxb;
+    while(!caudaT.Vazia()){
+        caudaT.Retira(auxrs, auxb);
+        if(auxb){
+            auxf.Insere(auxrs,auxb);
+            app.draw(auxrs);
+        }
+    }
+    while(!auxf.Vazia()){
+        auxf.Retira(auxrs,auxb);
+        if(auxb)
+            caudaT.Insere(auxrs,auxb);
+    }
+};    

@@ -16,6 +16,7 @@ private:
 public:
 	Fila();
 	~Fila();
+    void Reset();
 	void Insere( Gen &, bool &);
 	void Retira(Gen  &, bool &);
 //	void RetiraAteElemento(Gen & x, bool & deuCerto);
@@ -29,6 +30,13 @@ public:
 */
 template<class Gen>
 Fila<Gen>::Fila(){ // Cria()
+	ultimo = 0;
+	primeiro = 0;
+	nElementos = 0;
+};
+
+template<class Gen>
+void Fila<Gen>::Reset(){ // Cria()
 	ultimo = 0;
 	primeiro = 0;
 	nElementos = 0;
@@ -56,7 +64,7 @@ void Fila<Gen>::Insere( Gen & x, bool& deuCerto){
         deuCerto=true;
         nElementos++;
         elementos[ultimo]= x;
-        if(ultimo==nElementos-1){
+        if(ultimo==20000 - 1){
             ultimo=0;
         }else{
             ultimo++;
@@ -74,7 +82,7 @@ void Fila<Gen>::Retira(Gen &x, bool & deuCerto){
         deuCerto=true;
         nElementos--;
         x=elementos[primeiro];
-        if(primeiro==nElementos-1){
+        if(primeiro==20000 - 1){
             primeiro=0;
         }else{
             primeiro++;
